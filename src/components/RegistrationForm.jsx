@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { esErrorDuplicado, registrarInscripcion } from '../lib/supabase'
+import {
+  obtenerMensajeError,
+  registrarInscripcion,
+  supabaseConfigurado,
+  validarConfiguracionSupabase,
+} from '../lib/supabase'
 import {
   CARRERAS_SUGERIDAS,
   ESTADO_INICIAL,
@@ -10,7 +15,6 @@ import {
 } from '../lib/validation'
 import SuccessMessage from './SuccessMessage'
 
-const MENSAJE_DUPLICADO = 'Ya existe una inscripción con esos datos.'
 const MENSAJE_ERROR_GENERAL =
   'No pudimos completar tu inscripción. Inténtalo de nuevo en unos momentos.'
 
@@ -39,6 +43,7 @@ export default function RegistrationForm() {
   const [enviando, setEnviando] = useState(false)
   const [errorGlobal, setErrorGlobal] = useState('')
   const [inscripcionExitosa, setInscripcionExitosa] = useState(null)
+  const [configError] = useState(() => validarConfiguracionSupabase())
 
   const handleChange = (field) => (event) => {
     let { value } = event.target
@@ -72,18 +77,22 @@ export default function RegistrationForm() {
     setEnviando(true)
     setErrorGlobal('')
 
+    const configErrorActual = validarConfiguracionSupabase()
+    if (configErrorActual) {
+      setEnviando(false)
+      setErrorGlobal(configErrorActual)
+      return
+    }
+
     const payload = construirPayload(values)
     const { error } = await registrarInscripcion(payload)
 
     setEnviando(false)
 
     if (error) {
-      if (esErrorDuplicado(error)) {
-        setErrorGlobal(MENSAJE_DUPLICADO)
-      } else {
-        console.error('[Inscripción]', error)
-        setErrorGlobal(MENSAJE_ERROR_GENERAL)
-      }
+      const mensaje = obtenerMensajeError(error) ?? MENSAJE_ERROR_GENERAL
+      console.error('[Inscripción]', error)
+      setErrorGlobal(mensaje)
       return
     }
 
@@ -108,6 +117,20 @@ export default function RegistrationForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
+      {configError && (
+        <div
+          className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+          role="alert"
+        >
+          <p className="font-semibold">Configuración pendiente</p>
+          <p className="mt-1">{configError}</p>
+          <p className="mt-2 text-xs text-amber-800">
+            Supabase → Project Settings → API → copia <strong>anon public</strong> en{' '}
+            <code className="rounded bg-amber-100 px-1">.env</code>
+          </p>
+        </div>
+      )}
+
       {errorGlobal && (
         <div
           className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
@@ -274,7 +297,7 @@ export default function RegistrationForm() {
 
       <button
         type="submit"
-        disabled={enviando}
+        disabled={enviando || !supabaseConfigurado}
         className="flex w-full items-center justify-center rounded-full bg-primary-700 px-8 py-4 text-sm font-bold uppercase tracking-wide text-white shadow-lg transition hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {enviando ? (
