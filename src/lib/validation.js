@@ -32,13 +32,18 @@ export function validarFormulario(values) {
     errores.nombre = MENSAJES.nombreLargo
   }
 
-  const codigo = values.codigo?.trim() ?? ''
-  if (!codigo) {
-    errores.codigo = MENSAJES.requerido
-  } else if (codigo.length < 5) {
-    errores.codigo = MENSAJES.codigoCorto
-  } else if (codigo.length > 20) {
-    errores.codigo = MENSAJES.codigoLargo
+  const dni = values.dni?.trim() ?? ''
+  if (!dni) {
+    errores.dni = MENSAJES.requerido
+  }
+
+  const codigoMatricula = values.codigoMatricula?.trim() ?? ''
+  if (!codigoMatricula) {
+    errores.codigoMatricula = MENSAJES.requerido
+  } else if (codigoMatricula.length < 5) {
+    errores.codigoMatricula = MENSAJES.codigoCorto
+  } else if (codigoMatricula.length > 20) {
+    errores.codigoMatricula = MENSAJES.codigoLargo
   }
 
   const telefono = values.telefono?.trim() ?? ''
@@ -72,13 +77,12 @@ function extraerDni(codigo) {
 }
 
 export function construirPayload(values) {
-  const codigo = values.codigo.trim()
   const esTodosJuntos = values.preferencia === PREFERENCIAS.TODOS_JUNTOS
 
   return {
     nombre: values.nombre.trim(),
-    dni: extraerDni(codigo),
-    codigo_matricula: codigo,
+    dni: values.dni.trim(),
+    codigo_matricula: values.codigoMatricula.trim(),
     telefono: values.telefono.trim(),
     carrera: values.carrera.trim(),
     voto_todos_juntos: esTodosJuntos,
@@ -88,7 +92,8 @@ export function construirPayload(values) {
 
 export const ESTADO_INICIAL = {
   nombre: '',
-  codigo: '',
+  dni: '',
+  codigoMatricula: '',
   telefono: '',
   carrera: '',
   preferencia: '',
