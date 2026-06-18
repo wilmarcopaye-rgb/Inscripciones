@@ -6,6 +6,21 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim() ?? ''
 let supabaseClient = null
 
 /**
+ * Acepta clave anon legacy (JWT eyJ...) y clave publishable nueva (sb_publishable_...).
+ */
+function esClavePublicaValida(key) {
+  if (key.startsWith('eyJ')) {
+    return key.length > 100
+  }
+
+  if (key.startsWith('sb_publishable_')) {
+    return key.length > 20
+  }
+
+  return false
+}
+
+/**
  * Valida que las credenciales de Supabase estén configuradas correctamente.
  */
 export function validarConfiguracionSupabase() {
@@ -20,15 +35,22 @@ export function validarConfiguracionSupabase() {
     return 'VITE_SUPABASE_URL no parece válida. Debe ser https://tu-proyecto.supabase.co'
   }
 
-  if (!supabaseAnonKey.startsWith('eyJ')) {
+  if (!esClavePublicaValida(supabaseAnonKey)) {
     return (
-      'VITE_SUPABASE_ANON_KEY no es válida. Usa la clave "anon public" (JWT) desde ' +
-      'Supabase → Project Settings → API. No uses el ID del proyecto.'
+      'VITE_SUPABASE_ANON_KEY no es válida. Usa la clave "anon public" o "publishable" ' +
+      'desde Supabase → Project Settings → API. No uses el ID del proyecto.'
     )
   }
 
   return null
 }
+
+export function estaSupabaseConfigurado() {
+  return !validarConfiguracionSupabase()
+}
+
+/** Alias de compatibilidad (evita errores con HMR/caché antigua). */
+export const supabaseConfigurado = estaSupabaseConfigurado
 
 function obtenerCliente() {
   const configError = validarConfiguracionSupabase()
@@ -95,11 +117,9 @@ export function obtenerMensajeError(error) {
   if (esNoAutorizado) {
     return (
       'Error de autenticación con Supabase. Revisa VITE_SUPABASE_ANON_KEY en .env ' +
-      '(clave anon public que empieza con eyJ...) y reinicia npm run dev.'
+      'y reinicia npm run dev.'
     )
   }
 
   return null
 }
-
-export const supabaseConfigurado = !validarConfiguracionSupabase()

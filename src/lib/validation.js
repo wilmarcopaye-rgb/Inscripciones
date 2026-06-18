@@ -1,19 +1,16 @@
 /**
  * Validaciones del formulario de inscripción.
- * Mensajes amigables en español para el usuario.
  */
 
 const MENSAJES = {
   requerido: 'Este campo es obligatorio.',
   nombreCorto: 'Ingresa tu nombre completo (mínimo 3 caracteres).',
   nombreLargo: 'El nombre no puede superar 100 caracteres.',
-  dniInvalido: 'El DNI debe tener exactamente 8 dígitos numéricos.',
-  matriculaCorta: 'El código de matrícula debe tener al menos 5 caracteres.',
-  matriculaLarga: 'El código de matrícula no puede superar 20 caracteres.',
+  codigoCorto: 'El código debe tener al menos 5 caracteres.',
+  codigoLargo: 'El código no puede superar 20 caracteres.',
   telefonoInvalido: 'El celular debe tener 9 dígitos numéricos.',
-  carreraCorta: 'Indica tu carrera (mínimo 2 caracteres).',
-  carreraLarga: 'La carrera no puede superar 100 caracteres.',
-  preferencia: 'Selecciona una preferencia de lista.',
+  carrera: 'Selecciona tu escuela profesional.',
+  preferencia: 'Selecciona una opción de votación.',
 }
 
 export const PREFERENCIAS = {
@@ -21,20 +18,6 @@ export const PREFERENCIAS = {
   SOMOS_ESTUDIANTIL: 'somos_estudiantil',
 }
 
-export const CARRERAS_SUGERIDAS = [
-  'Administración',
-  'Contabilidad',
-  'Derecho',
-  'Educación',
-  'Enfermería',
-  'Ingeniería Civil',
-  'Ingeniería de Sistemas',
-  'Medicina',
-  'Psicología',
-  'Otra',
-]
-
-const DNI_REGEX = /^\d{8}$/
 const TELEFONO_REGEX = /^\d{9}$/
 
 export function validarFormulario(values) {
@@ -49,20 +32,13 @@ export function validarFormulario(values) {
     errores.nombre = MENSAJES.nombreLargo
   }
 
-  const dni = values.dni?.trim() ?? ''
-  if (!dni) {
-    errores.dni = MENSAJES.requerido
-  } else if (!DNI_REGEX.test(dni)) {
-    errores.dni = MENSAJES.dniInvalido
-  }
-
-  const codigoMatricula = values.codigo_matricula?.trim() ?? ''
-  if (!codigoMatricula) {
-    errores.codigo_matricula = MENSAJES.requerido
-  } else if (codigoMatricula.length < 5) {
-    errores.codigo_matricula = MENSAJES.matriculaCorta
-  } else if (codigoMatricula.length > 20) {
-    errores.codigo_matricula = MENSAJES.matriculaLarga
+  const codigo = values.codigo?.trim() ?? ''
+  if (!codigo) {
+    errores.codigo = MENSAJES.requerido
+  } else if (codigo.length < 5) {
+    errores.codigo = MENSAJES.codigoCorto
+  } else if (codigo.length > 20) {
+    errores.codigo = MENSAJES.codigoLargo
   }
 
   const telefono = values.telefono?.trim() ?? ''
@@ -74,11 +50,7 @@ export function validarFormulario(values) {
 
   const carrera = values.carrera?.trim() ?? ''
   if (!carrera) {
-    errores.carrera = MENSAJES.requerido
-  } else if (carrera.length < 2) {
-    errores.carrera = MENSAJES.carreraCorta
-  } else if (carrera.length > 100) {
-    errores.carrera = MENSAJES.carreraLarga
+    errores.carrera = MENSAJES.carrera
   }
 
   if (!values.preferencia) {
@@ -88,23 +60,25 @@ export function validarFormulario(values) {
   return errores
 }
 
-/**
- * Filtra entrada numérica en tiempo real.
- */
 export function soloNumeros(value, maxLength) {
   return value.replace(/\D/g, '').slice(0, maxLength)
 }
 
-/**
- * Construye el payload para Supabase a partir del formulario.
- */
+function extraerDni(codigo) {
+  const numeros = codigo.replace(/\D/g, '')
+  if (numeros.length >= 8) return numeros.slice(0, 8)
+  if (numeros.length > 0) return numeros.padStart(8, '0')
+  return codigo.slice(0, 8).toUpperCase()
+}
+
 export function construirPayload(values) {
+  const codigo = values.codigo.trim()
   const esTodosJuntos = values.preferencia === PREFERENCIAS.TODOS_JUNTOS
 
   return {
     nombre: values.nombre.trim(),
-    dni: values.dni.trim(),
-    codigo_matricula: values.codigo_matricula.trim(),
+    dni: extraerDni(codigo),
+    codigo_matricula: codigo,
     telefono: values.telefono.trim(),
     carrera: values.carrera.trim(),
     voto_todos_juntos: esTodosJuntos,
@@ -114,8 +88,7 @@ export function construirPayload(values) {
 
 export const ESTADO_INICIAL = {
   nombre: '',
-  dni: '',
-  codigo_matricula: '',
+  codigo: '',
   telefono: '',
   carrera: '',
   preferencia: '',
