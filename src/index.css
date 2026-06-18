@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+
+  --color-primary-50: #eef4ff;
+  --color-primary-100: #dce8ff;
+  --color-primary-200: #b8d0ff;
+  --color-primary-300: #8ab0ff;
+  --color-primary-400: #5a88f5;
+  --color-primary-500: #3568e0;
+  --color-primary-600: #1f4fc4;
+  --color-primary-700: #163f9f;
+  --color-primary-800: #12347f;
+  --color-primary-900: #0f2d5c;
+
+  --color-accent-400: #f5c451;
+  --color-accent-500: #e8a820;
+  --color-accent-600: #c8922e;
+
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-slide-up: slide-up 0.6s ease-out forwards;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    @apply bg-primary-200 text-primary-900;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  .section-container {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl;
+  }
+
+  .section-subtitle {
+    @apply mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg;
+  }
+
+  .animate-on-scroll {
+    animation: slide-up 0.7s ease-out forwards;
+  }
+}
