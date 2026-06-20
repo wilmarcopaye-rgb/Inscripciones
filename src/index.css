@@ -46,9 +46,11 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(238, 243, 248, 0.86);
+  background: radial-gradient(120% 90% at 85% -10%, rgba(159, 211, 242, 0.08), transparent 60%),
+              linear-gradient(165deg, rgba(14, 44, 76, 0.95) 0%, rgba(12, 36, 63, 0.95) 70%, rgba(8, 26, 48, 0.95) 100%);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 }
 
 .landing-brand-word {

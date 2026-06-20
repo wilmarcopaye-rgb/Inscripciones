@@ -71,16 +71,27 @@ function obtenerCliente() {
 }
 
 /**
- * Inserta una nueva inscripción sin devolver filas (evita SELECT implícito con RLS).
+ * Inserta una nueva inscripción y devuelve el id.
  */
 export async function registrarInscripcion(payload) {
   const { client, configError } = obtenerCliente()
 
   if (configError) {
-    return { data: null, error: { message: configError, code: 'CONFIG' } }
+    return { data: null, error: { message: configError, code: 'CONFIG' }, id: null }
   }
 
-  return client.from('inscripciones').insert([payload], { returning: 'minimal' })
+  const { data, error } = await client
+    .from('inscripciones')
+    .insert([payload], { returning: 'representation' })
+
+  if (error) {
+    return { data, error, id: null }
+  }
+
+  // Extraer el id del primer registro insertado
+  const id = data && data.length > 0 ? data[0].id : null
+
+  return { data, error: null, id }
 }
 
 /**
@@ -122,4 +133,12 @@ export function obtenerMensajeError(error) {
   }
 
   return null
+}
+
+/**
+ * Obtiene el cliente de Supabase para operaciones directas.
+ */
+export function obtenerSupabase() {
+  const { client } = obtenerCliente()
+  return client
 }

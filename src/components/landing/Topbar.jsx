@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom'
-
-export default function Topbar() {
+export default function Topbar({ onOpenRegister }) {
   return (
     <header className="landing-topbar">
       <div className="landing-shell flex items-center justify-between">
@@ -9,9 +7,12 @@ export default function Topbar() {
           <span className="font-bebas text-2xl text-white">TODOS JUNTOS</span>
         </div>
         <nav className="flex items-center gap-6">
-          <Link to="/register" className="landing-btn landing-btn-primary text-sm">
+          <button
+            onClick={onOpenRegister}
+            className="landing-btn landing-btn-primary text-sm"
+          >
             Inscribirme
-          </Link>
+          </button>
         </nav>
       </div>
     </header>

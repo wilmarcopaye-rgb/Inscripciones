@@ -1,6 +1,6 @@
 import Carousel from './Carousel'
 
-export default function HeroSection() {
+export default function HeroSection({ onOpenRegister }) {
   return (
     <section className="landing-hero">
       <div className="landing-shell relative z-[2]">
@@ -16,9 +16,12 @@ export default function HeroSection() {
           profesionales por una universidad mejor.
         </p>
         <div className="flex flex-wrap items-center gap-3">
-          <a href="#inscripcion" className="landing-btn landing-btn-primary">
+          <button
+            onClick={onOpenRegister}
+            className="landing-btn landing-btn-primary"
+          >
             Quiero inscribirme
-          </a>
+          </button>
           <a href="#propuestas" className="landing-btn landing-btn-ghost">
             Ver nuestras propuestas
           </a>

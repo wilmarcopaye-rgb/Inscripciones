@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { WHATSAPP_URL } from '../../lib/content'
 
 const PERKS = [
@@ -7,7 +6,7 @@ const PERKS = [
   'Suma tu voz por todas las escuelas profesionales.',
 ]
 
-export default function SumateSection() {
+export default function SumateSection({ onOpenRegister }) {
   return (
     <section className="landing-signup" id="inscripcion">
       <div className="landing-shell">
@@ -72,12 +71,12 @@ export default function SumateSection() {
             <p className="mb-5 text-sm text-[var(--ink-2)]">
               Registra tus datos y elige tu preferencia de lista en el formulario oficial.
             </p>
-            <Link
-              to="/register"
+            <button
+              onClick={onOpenRegister}
               className="landing-btn landing-btn-primary w-full text-center no-underline"
             >
               Ir al formulario de registro
-            </Link>
+            </button>
           </div>
         </div>
       </div>
