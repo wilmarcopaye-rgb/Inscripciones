@@ -1,4 +1,4 @@
-export const WHATSAPP_URL = 'https://chat.whatsapp.com/C6PbcD6jOabFOS6h7JDNc4'
+export const WHATSAPP_URL = 'https://chat.whatsapp.com/EPqVQnwVS0F38r4rw2XHBd'
 
 export const CARRERAS_GRUPOS = [
   {
