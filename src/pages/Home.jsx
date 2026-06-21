@@ -9,7 +9,8 @@ import RegisterModal from '../components/landing/RegisterModal';
 import LandingFooter from '../components/landing/LandingFooter';
 
 export default function Home() {
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  // Cambia a true si quieres que el modal se abra al cargar la página
+  const [showRegisterModal, setShowRegisterModal] = useState(true); // 👈 TRUE para que aparezca al inicio
 
   return (
     <div className="landing-page min-h-screen">
