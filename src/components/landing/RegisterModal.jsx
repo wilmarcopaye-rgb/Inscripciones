@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import LogoBanner from '../registration/LogoBanner';
 import VoteCheckbox from '../registration/VoteCheckbox';
 import SuccessScreen from '../registration/SuccessScreen';
-import { CARRERAS_OPCIONES } from '../../lib/content'; // solo esta importación
+import { CARRERAS_OPCIONES } from '../../lib/content';
 import {
   obtenerMensajeError,
   registrarInscripcion,
@@ -168,8 +167,8 @@ export default function RegisterModal({ isOpen, onClose }) {
                     <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="h-12 w-12 object-cover" />
                   </div>
                   <div>
-                    <h2 className="font-bebas text-xl leading-tight text-white">Inscripción Estudiantil</h2>
-                    <p className="font-poppins text-xs text-white/50">El 2 de julio apoya al TODOS UNA</p>
+                    <h2 className="font-bebas text-xl leading-tight text-white">Yo decido mi voto</h2>
+                    <p className="font-poppins text-xs text-white/50">El 2 de julio apoya a TODOS UNA</p>
                   </div>
                 </div>
                 <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white border-2 border-white">
@@ -188,28 +187,38 @@ export default function RegisterModal({ isOpen, onClose }) {
               )}
 
               <form onSubmit={handleSubmit} noValidate className="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
+
                 <div>
                   <p className="mb-3 font-bebas text-lg tracking-wide bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                     PREGUNTAS DE VOTACIÓN
                   </p>
+
                   <div className="space-y-3">
-                    <VoteCheckbox
-                      number="1"
-                      label="Vota por el TODOS JUNTOS POR LA UNA"
-                      description="Marca el cuadro con el número 1"
-                      checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
-                      onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
-                      color="purple"
-                    />
-                    <VoteCheckbox
-                      number="9"
-                      label="🚫 NO al continuismo - ALTO a la corrupción"
-                      description="Marca el cuadro con el número 9"
-                      checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
-                      onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
-                      color="cyan"
-                    />
+                    {/* Opción 1 */}
+                    <div className="rounded-xl border border-white/20 bg-white/5 p-4">
+                      <VoteCheckbox
+                        number="1"
+                        label="Vota por el TODOS JUNTOS POR LA UNA"
+                        description="Marca el cuadro con el número 1"
+                        checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
+                        onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
+                        color="purple"
+                      />
+                    </div>
+
+                    {/* Opción 2 */}
+                    <div className="rounded-xl border border-white/20 bg-white/5 p-4">
+                      <VoteCheckbox
+                        number="9"
+                        label="🚫 NO al continuismo - ALTO a la corrupción"
+                        description="Marca el cuadro con el número 9"
+                        checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
+                        onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
+                        color="cyan"
+                      />
+                    </div>
                   </div>
+
                   {errores.preferencia && (
                     <p className="mt-2 text-sm text-red-400">{errores.preferencia}</p>
                   )}
@@ -221,7 +230,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                       ¡FELICIDADES POR TU BUENA ELECCIÓN!
                     </p>
                     <p className="mt-1 font-poppins text-sm text-white/80">
-                      Este <span className="font-bold text-purple-400">2 de julio</span> somos todos juntos por la UNA 💜
+                      Este <span className="font-bold text-purple-400">2 de julio</span> somos todos juntos por la UNA 🐧
                     </p>
                   </div>
                 )}
@@ -230,7 +239,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   <div className="rounded-xl border-2 border-red-500/60 bg-red-500/10 p-4 text-center">
                     <p className="font-bebas text-xl text-red-400">🚫 ¡NO POR LOS CORRUPTOS!</p>
                     <p className="mt-1 font-poppins text-sm text-white/80">
-                      Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 💜
+                      Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 
                     </p>
                   </div>
                 )}
@@ -341,7 +350,6 @@ export default function RegisterModal({ isOpen, onClose }) {
                     {errores.telefono && <p className="mt-1 text-sm text-red-400">{errores.telefono}</p>}
                   </div>
 
-                  {/* Carrera con solo 3 opciones */}
                   <div>
                     <label htmlFor="carrera" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
                       Carrera / Escuela profesional *
