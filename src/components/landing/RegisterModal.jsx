@@ -222,8 +222,8 @@ export default function RegisterModal({ isOpen, onClose }) {
                       description="Marca el cuadro con el número 9"
                       checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
                       onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
-                      color="cyan"
-                    />
+                      color="red" // 👈 cambio a rojo
+                    />  
                   </div>
 
                   {/* Mensaje de error cuando se selecciona la opción 9 */}
