@@ -6,7 +6,7 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
       text: 'text-purple-500',
       checkBg: 'bg-purple-500',
       checkBorder: 'border-purple-500',
-      xColor: 'text-purple-500', // X morada
+      xColor: 'text-purple-500',
     },
     red: {
       border: 'border-red-500',
@@ -14,7 +14,7 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
       text: 'text-red-500',
       checkBg: 'bg-red-500',
       checkBorder: 'border-red-500',
-      xColor: 'text-red-500', // X roja
+      xColor: 'text-red-500',
     },
   };
 
@@ -22,23 +22,23 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
 
   return (
     <div className="flex items-center gap-4 cursor-pointer group" onClick={onChange}>
-      {/* Cuadrado con número y X superpuesta */}
+      {/* Cuadrado más grande */}
       <div className="flex-shrink-0">
         <div
           className={`
-            w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all relative
+            w-16 h-16 rounded-xl border-2 flex items-center justify-center transition-all relative
             ${checked ? `${colors.bg} ${colors.border}` : `${colors.border} bg-transparent`}
             ${!checked && colors.hover}
             bg-white/10
           `}
         >
           {/* Número más grande */}
-          <span className={checked ? 'text-white text-4xl font-bold' : `font-bold text-2xl ${colors.text}`}>
+          <span className={checked ? 'text-white text-5xl font-bold' : `font-bold text-3xl ${colors.text}`}>
             {number}
           </span>
-          {/* X más grande, más gruesa, redondeada */}
+          {/* X más grande y gruesa */}
           {checked && (
-            <span className={`absolute inset-0 flex items-center justify-center ${colors.xColor} text-5xl font-black leading-none pointer-events-none`}>
+            <span className={`absolute inset-0 flex items-center justify-center ${colors.xColor} text-6xl font-black leading-none pointer-events-none`}>
               ✕
             </span>
           )}

@@ -176,8 +176,8 @@ export default function RegisterModal({ isOpen, onClose }) {
               {/* 🔹 ENCABEZADO - NUEVO TEXTO */}
               <div className="mb-6 flex items-start justify-between gap-3">
                 <div className="flex gap-3 flex-1">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg overflow-hidden">
-                    <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="h-12 w-12 object-cover" />
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg overflow-hidden">
+                    <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="h-16 w-16 object-cover" />
                   </div>
                   <div>
                     <h2 className="font-bebas text-2xl leading-tight text-white">
