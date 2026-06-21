@@ -1,6 +1,4 @@
-/**
- * Validaciones del formulario de inscripción.
- */
+// src/lib/validation.js
 
 const MENSAJES = {
   requerido: 'Este campo es obligatorio.',
@@ -12,106 +10,97 @@ const MENSAJES = {
   telefonoInvalido: 'El celular debe tener 9 dígitos numéricos.',
   carrera: 'Selecciona tu escuela profesional.',
   preferencia: 'Selecciona una opción de votación.',
-}
+};
 
 export const PREFERENCIAS = {
   TODOS_JUNTOS: 'todos_juntos',
   SOMOS_ESTUDIANTIL: 'somos_estudiantil',
-}
+};
 
 export const TIPOS_IDENTIFICACION = {
   DNI: 'dni',
   CODIGO_MATRICULA: 'codigoMatricula',
-}
+};
 
-const TELEFONO_REGEX = /^\d{9}$/
-const DNI_REGEX = /^\d{8}$/
+const TELEFONO_REGEX = /^\d{9}$/;
+const DNI_REGEX = /^\d{8}$/;
 
 export function validarFormulario(values, tipoIdentificacion = TIPOS_IDENTIFICACION.CODIGO_MATRICULA) {
-  const errores = {}
+  const errores = {};
 
-  const nombre = values.nombre?.trim() ?? ''
+  const nombre = values.nombre?.trim() ?? '';
   if (!nombre) {
-    errores.nombre = MENSAJES.requerido
+    errores.nombre = MENSAJES.requerido;
   } else if (nombre.length < 3) {
-    errores.nombre = MENSAJES.nombreCorto
+    errores.nombre = MENSAJES.nombreCorto;
   } else if (nombre.length > 100) {
-    errores.nombre = MENSAJES.nombreLargo
+    errores.nombre = MENSAJES.nombreLargo;
   }
 
-  // Validar DNI solo si está seleccionado
   if (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI) {
-    const dni = values.dni?.trim() ?? ''
+    const dni = values.dni?.trim() ?? '';
     if (!dni) {
-      errores.dni = MENSAJES.requerido
+      errores.dni = MENSAJES.requerido;
     } else if (!DNI_REGEX.test(dni)) {
-      errores.dni = MENSAJES.dniInvalido
+      errores.dni = MENSAJES.dniInvalido;
     }
   }
 
-  // Validar Código de Matrícula solo si está seleccionado
   if (tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA) {
-    const codigoMatricula = values.codigoMatricula?.trim() ?? ''
+    const codigoMatricula = values.codigoMatricula?.trim() ?? '';
     if (!codigoMatricula) {
-      errores.codigoMatricula = MENSAJES.requerido
+      errores.codigoMatricula = MENSAJES.requerido;
     } else if (codigoMatricula.length < 5) {
-      errores.codigoMatricula = MENSAJES.codigoCorto
+      errores.codigoMatricula = MENSAJES.codigoCorto;
     } else if (codigoMatricula.length > 20) {
-      errores.codigoMatricula = MENSAJES.codigoLargo
+      errores.codigoMatricula = MENSAJES.codigoLargo;
     }
   }
 
-  const telefono = values.telefono?.trim() ?? ''
+  const telefono = values.telefono?.trim() ?? '';
   if (!telefono) {
-    errores.telefono = MENSAJES.requerido
+    errores.telefono = MENSAJES.requerido;
   } else if (!TELEFONO_REGEX.test(telefono)) {
-    errores.telefono = MENSAJES.telefonoInvalido
+    errores.telefono = MENSAJES.telefonoInvalido;
   }
 
-  const carrera = values.carrera?.trim() ?? ''
+  const carrera = values.carrera?.trim() ?? '';
   if (!carrera) {
-    errores.carrera = MENSAJES.carrera
+    errores.carrera = MENSAJES.carrera;
   }
 
   if (!values.preferencia) {
-    errores.preferencia = MENSAJES.preferencia
+    errores.preferencia = MENSAJES.preferencia;
   }
 
-  return errores
+  return errores;
 }
 
 export function soloNumeros(value, maxLength) {
-  return value.replace(/\D/g, '').slice(0, maxLength)
+  return value.replace(/\D/g, '').slice(0, maxLength);
 }
 
-function extraerDni(codigo) {
-  const numeros = codigo.replace(/\D/g, '')
-  if (numeros.length >= 8) return numeros.slice(0, 8)
-  if (numeros.length > 0) return numeros.padStart(8, '0')
-  return codigo.slice(0, 8).toUpperCase()
-}
-
+// 🟢 ÚNICA DEFINICIÓN DE construirPayload
 export function construirPayload(values, tipoIdentificacion = TIPOS_IDENTIFICACION.CODIGO_MATRICULA) {
-  const esTodosJuntos = values.preferencia === PREFERENCIAS.TODOS_JUNTOS
-  
+  const esTodosJuntos = values.preferencia === PREFERENCIAS.TODOS_JUNTOS;
+
   const payload = {
     nombre: values.nombre.trim(),
     telefono: values.telefono.trim(),
     carrera: values.carrera.trim(),
     voto_todos_juntos: esTodosJuntos,
     voto_estudiantil: !esTodosJuntos,
-  }
-  
-  // Incluir solo el tipo de identificación seleccionado
+  };
+
   if (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI) {
-    payload.dni = values.dni.trim()
-    payload.codigo_matricula = '' // Enviar vacío
+    payload.dni = values.dni.trim();
+    payload.codigo_matricula = null; // 👈 null en lugar de ''
   } else {
-    payload.dni = '' // Enviar vacío
-    payload.codigo_matricula = values.codigoMatricula.trim()
+    payload.dni = null; // 👈 null en lugar de ''
+    payload.codigo_matricula = values.codigoMatricula.trim();
   }
 
-  return payload
+  return payload;
 }
 
 export const ESTADO_INICIAL = {
@@ -121,5 +110,4 @@ export const ESTADO_INICIAL = {
   telefono: '',
   carrera: '',
   preferencia: '',
-}
-
+};
