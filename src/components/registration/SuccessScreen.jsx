@@ -1,95 +1,92 @@
-import { useState, useEffect } from 'react'
-import { WHATSAPP_URL } from '../../lib/content'
-import { obtenerSupabase } from '../../lib/supabase'
+import { useState, useEffect } from 'react';
+import { WHATSAPP_URL } from '../../lib/content';
+import { obtenerSupabase } from '../../lib/supabase';
 
 export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
-  const [comentario, setComentario] = useState('')
-  const [enviandoComentario, setEnviandoComentario] = useState(false)
-  const [errorComentario, setErrorComentario] = useState('')
-  const [comentarioEnviado, setComentarioEnviado] = useState(false)
-  const [idTemp, setIdTemp] = useState(null)
-  const [nombreTemp, setNombreTemp] = useState(nombre)
+  const [comentario, setComentario] = useState('');
+  const [enviandoComentario, setEnviandoComentario] = useState(false);
+  const [errorComentario, setErrorComentario] = useState('');
+  const [comentarioEnviado, setComentarioEnviado] = useState(false);
+  const [idTemp, setIdTemp] = useState(null);
+  const [nombreTemp, setNombreTemp] = useState(nombre);
 
   // Obtener datos temporales de localStorage
   useEffect(() => {
-    console.log('SuccessScreen mounted, buscando datos temporales...')
-    console.log('inscripcionId prop:', inscripcionId)
+    console.log('SuccessScreen mounted, buscando datos temporales...');
+    console.log('inscripcionId prop:', inscripcionId);
     
-    const datosTemporales = localStorage.getItem('inscripcionTemporal')
-    console.log('localStorage.getItem result:', datosTemporales)
+    const datosTemporales = localStorage.getItem('inscripcionTemporal');
+    console.log('localStorage.getItem result:', datosTemporales);
     
     if (datosTemporales) {
       try {
-        const { nombre: n, inscripcionId: id } = JSON.parse(datosTemporales)
-        console.log('Datos parseados:', { n, id })
-        setNombreTemp(n)
-        setIdTemp(id)
-        console.log('Datos temporales cargados:', { n, id })
+        const { nombre: n, inscripcionId: id } = JSON.parse(datosTemporales);
+        console.log('Datos parseados:', { n, id });
+        setNombreTemp(n);
+        setIdTemp(id);
+        console.log('Datos temporales cargados:', { n, id });
       } catch (err) {
-        console.error('Error al parsear datos temporales:', err)
+        console.error('Error al parsear datos temporales:', err);
       }
     } else {
-      console.log('No hay datos en localStorage')
-      // Fallback: si no está en localStorage pero viene en props, usar props
+      console.log('No hay datos en localStorage');
       if (inscripcionId) {
-        console.log('Usando inscripcionId de props:', inscripcionId)
-        setIdTemp(inscripcionId)
+        console.log('Usando inscripcionId de props:', inscripcionId);
+        setIdTemp(inscripcionId);
       }
     }
-  }, [inscripcionId])
+  }, [inscripcionId]);
 
   const handleGuardarComentario = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!comentario.trim()) {
-      setErrorComentario('Por favor escribe un comentario')
-      return
+      setErrorComentario('Por favor escribe un comentario');
+      return;
     }
 
     if (!idTemp) {
-      setErrorComentario('Error: ID de inscripción no disponible. Recarga la página.')
-      console.error('idTemp es:', idTemp)
-      return
+      setErrorComentario('Error: ID de inscripción no disponible. Recarga la página.');
+      console.error('idTemp es:', idTemp);
+      return;
     }
 
-    setEnviandoComentario(true)
-    setErrorComentario('')
+    setEnviandoComentario(true);
+    setErrorComentario('');
 
     try {
-      const supabase = obtenerSupabase()
+      const supabase = obtenerSupabase();
       const payload = {
         inscripcion_id: Number(idTemp),
         nombre_inscrito: nombreTemp,
         comentario: comentario.trim(),
-      }
+      };
       
-      console.log('Enviando comentario:', payload)
+      console.log('Enviando comentario:', payload);
       
-      const { error } = await supabase.from('comentarios').insert([payload])
+      const { error } = await supabase.from('comentarios').insert([payload]);
 
       if (error) {
-        console.error('Error al guardar comentario:', error)
-        setErrorComentario('No pudimos guardar tu comentario. Intenta nuevamente.')
-        return
+        console.error('Error al guardar comentario:', error);
+        setErrorComentario('No pudimos guardar tu comentario. Intenta nuevamente.');
+        return;
       }
 
-      setComentarioEnviado(true)
-      setComentario('')
+      setComentarioEnviado(true);
+      setComentario('');
 
-      // Limpiar datos temporales después de enviar
-      localStorage.removeItem('inscripcionTemporal')
+      localStorage.removeItem('inscripcionTemporal');
 
-      // Cerrar automáticamente después de 3 segundos
       setTimeout(() => {
-        onClose()
-      }, 3000)
+        onClose();
+      }, 3000);
     } catch (err) {
-      console.error('Error catch:', err)
-      setErrorComentario('Error al guardar el comentario')
+      console.error('Error catch:', err);
+      setErrorComentario('Error al guardar el comentario');
     } finally {
-      setEnviandoComentario(false)
+      setEnviandoComentario(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -101,19 +98,20 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
           </svg>
         </div>
 
+        {/* 🔹 NUEVO TEXTO DE ÉXITO */}
         <h2 className="font-bebas text-3xl tracking-wide bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-          ¡Inscripción exitosa!
+          Tu decisión hace la diferencia sobrino
         </h2>
         <p className="mt-4 font-poppins text-sm leading-relaxed text-white/80">
-          Gracias, <strong className="text-purple-400">{nombreTemp}</strong>. Este 2 de julio somos todos juntos por la UNA 💜
+          Gracias sobrino <strong className="text-purple-400">{nombreTemp}</strong>, el 2 de julio todos somos juntos.
         </p>
       </div>
 
-      {/* Sección de comentarios */}
+      {/* 🔹 SECCIÓN DE COMENTARIOS (restaurada) */}
       {!comentarioEnviado ? (
         <div className="border-t border-white/10 pt-6">
           <p className="mb-4 font-bebas text-sm tracking-wider bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            TU COMENTARIO
+            TU OPINIÓN IMPORTA, EL TÍO CHARLES TOMA NOTA
           </p>
           <form onSubmit={handleGuardarComentario} className="space-y-3">
             <textarea
@@ -121,8 +119,8 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
               name="comentario"
               value={comentario}
               onChange={(e) => {
-                setComentario(e.target.value)
-                setErrorComentario('')
+                setComentario(e.target.value);
+                setErrorComentario('');
               }}
               placeholder="¿Qué piensas? Comparte tu comentario con el movimiento..."
               disabled={enviandoComentario}
@@ -151,10 +149,10 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
         </div>
       )}
 
-      {/* Sección de WhatsApp */}
+      {/* 🔹 SECCIÓN DE WHATSAPP */}
       <div className="border-t border-white/10 pt-6">
         <p className="mb-4 font-poppins text-xs text-white/70 text-center">
-          Únete al grupo de WhatsApp para recibir avisos y novedades
+          Sobrino es crucial unirte al grupo de WhatsApp
         </p>
         <a
           href={WHATSAPP_URL}
@@ -176,13 +174,13 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
       {/* Botón cerrar */}
       <button
         onClick={() => {
-          localStorage.removeItem('inscripcionTemporal')
-          onClose()
+          localStorage.removeItem('inscripcionTemporal');
+          onClose();
         }}
         className="w-full font-poppins text-sm text-white/50 hover:text-white/80 transition py-2"
       >
         ← Cerrar
       </button>
     </div>
-  )
+  );
 }

@@ -30,7 +30,7 @@ export default function RegisterModal({ isOpen, onClose }) {
   const [tipoIdentificacion, setTipoIdentificacion] = useState(TIPOS_IDENTIFICACION.CODIGO_MATRICULA);
   const [voteSuccess, setVoteSuccess] = useState(false);
   const [voteWarning, setVoteWarning] = useState(false);
-  const [votoInvalido, setVotoInvalido] = useState(false); // 👈 nuevo estado
+  const [votoInvalido, setVotoInvalido] = useState(false);
 
   const configError = validarConfiguracionSupabase();
 
@@ -80,8 +80,6 @@ export default function RegisterModal({ isOpen, onClose }) {
     setVoteSuccess(preferencia === PREFERENCIAS.TODOS_JUNTOS);
     setVoteWarning(preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL);
     setErrorGlobal('');
-    
-    // 👇 Si elige la opción 9, bloqueamos el envío
     if (preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL) {
       setVotoInvalido(true);
     } else {
@@ -92,9 +90,8 @@ export default function RegisterModal({ isOpen, onClose }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // 👇 Bloquear envío si la opción 9 está seleccionada
     if (votoInvalido) {
-      setErrorGlobal('⚠️ No puedes inscribirte con esta opción. Selecciona la opción 1 para continuar.');
+      setErrorGlobal('⚠️ No, sobrino ahí no es');
       return;
     }
 
@@ -176,14 +173,19 @@ export default function RegisterModal({ isOpen, onClose }) {
                 backdropFilter: 'blur(20px)',
               }}
             >
+              {/* 🔹 ENCABEZADO - NUEVO TEXTO */}
               <div className="mb-6 flex items-start justify-between gap-3">
                 <div className="flex gap-3 flex-1">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg overflow-hidden">
                     <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="h-12 w-12 object-cover" />
                   </div>
                   <div>
-                    <h2 className="font-bebas text-xl leading-tight text-white">inscripción estudiantil</h2>
-                    <p className="font-poppins text-xs text-white/50">El 2 de julio apoya al TODOS UNA</p>
+                    <h2 className="font-bebas text-2xl leading-tight text-white">
+                      YA DECIDI MI VOTO,
+                    </h2>
+                    <p className="font-poppins text-sm text-green-400 font-semibold">
+                      Este 2 de julio construimos un futuro de nuestra universidad.
+                    </p>
                   </div>
                 </div>
                 <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white border-2 border-white">
@@ -202,11 +204,10 @@ export default function RegisterModal({ isOpen, onClose }) {
               )}
 
               <form onSubmit={handleSubmit} noValidate className="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
-
-
+                {/* 🔹 SECCIÓN DE VOTACIÓN */}
                 <div>
-                  <p className="mb-3 font-bebas text-lg tracking-wide bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    PREGUNTAS DE VOTACIÓN
+                  <p className="mb-3 font-bebas text-2xl tracking-wide text-white">
+                    Cédula de votación
                   </p>
 
                   {/* Opción 1 - TODOS JUNTOS */}
@@ -224,10 +225,11 @@ export default function RegisterModal({ isOpen, onClose }) {
                       checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                       onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
                       color="purple"
+                      emoji="😊"
                     />
                   </div>
 
-                  {/* Opción 9 - NO al continuismo (rojo) */}
+                  {/* Opción 4 - NO al continuismo (antes 9) */}
                   <div
                     className={`rounded-xl border-2 p-4 transition-all ${
                       values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL
@@ -236,21 +238,22 @@ export default function RegisterModal({ isOpen, onClose }) {
                     }`}
                   >
                     <VoteCheckbox
-                      number="9"
-                      label="🚫 NO al continuismo - ALTO a la corrupción"
-                      description="Marca el cuadro con el número 9"
+                      number="4"
+                      label="No sobrino no regreses con tu ex"
+                      description="Marca el cuadro con el número 4"
                       checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
                       onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
-                      color="red" // 👈 color rojo
+                      color="red"
+                      emoji="😞"
                     />
                   </div>
 
-                  {/* Mensaje de error cuando se selecciona la opción 9 */}
+                  {/* Mensaje de error para opción 4 */}
                   {votoInvalido && (
                     <div className="mt-3 rounded-xl border border-red-500/60 bg-red-500/10 p-3 text-center flex items-center justify-center gap-2">
                       <span className="text-2xl">⚠️</span>
-                      <span className="font-poppins text-sm text-red-400">
-                        No puedes inscribirte con esta opción. Por favor, selecciona la opción 1.
+                      <span className="font-poppins text-sm text-red-400 font-bold">
+                        No, sobrino ahí no es
                       </span>
                     </div>
                   )}
@@ -258,8 +261,11 @@ export default function RegisterModal({ isOpen, onClose }) {
                   {errores.preferencia && (
                     <p className="mt-2 text-sm text-red-400">{errores.preferencia}</p>
                   )}
+
+                 
                 </div>
 
+                {/* 🔹 MENSAJES DE ESTADO */}
                 {voteSuccess && (
                   <div className="rounded-xl border-2 border-purple-500/60 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-4 text-center">
                     <p className="font-bebas text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -275,11 +281,16 @@ export default function RegisterModal({ isOpen, onClose }) {
                   <div className="rounded-xl border-2 border-red-500/60 bg-red-500/10 p-4 text-center">
                     <p className="font-bebas text-xl text-red-400">🚫 ¡NO POR LOS CORRUPTOS!</p>
                     <p className="mt-1 font-poppins text-sm text-white/80">
-                      Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 
+                      Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 💜
                     </p>
                   </div>
                 )}
+                {/* 🔹 TEXTO DE AYUDA "Sobrino llena tus datos..." */}
+                <p className="mt-3 text-center font-poppins text-sm text-green-400 font-semibold">
+                  Sobrino llena tus datos y así ganarás grandes premios
+                </p>
 
+                {/* 🔹 CAMPOS DEL FORMULARIO */}
                 <div className="space-y-3 border-t border-white/10 pt-4">
                   <div>
                     <label htmlFor="nombre" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
@@ -290,7 +301,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                       className={inputClass}
                       value={values.nombre}
                       onChange={handleChange('nombre')}
-                      placeholder="Tu nombre completo"
+                      placeholder="Apellidos y nombres"
                       disabled={enviando}
                     />
                     {errores.nombre && <p className="mt-1 text-sm text-red-400">{errores.nombre}</p>}
@@ -388,7 +399,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
                   <div>
                     <label htmlFor="carrera" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                      Carrera / Escuela profesional *
+                      De qué área eres sobrino *
                     </label>
                     <select
                       id="carrera"
@@ -414,7 +425,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
                 <button
                   type="submit"
-                  disabled={enviando || !supabaseConfigurado() || votoInvalido} // 👈 bloqueado si voto inválido
+                  disabled={enviando || !supabaseConfigurado() || votoInvalido}
                   className="font-bebas h-12 w-full rounded-xl text-xl tracking-wider text-white transition disabled:cursor-not-allowed disabled:opacity-50 font-bold"
                   style={{
                     background: 'var(--accent-green)',

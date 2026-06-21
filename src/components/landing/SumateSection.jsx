@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { WHATSAPP_URL } from '../../lib/content';
 
 const PERKS = [
@@ -7,17 +8,26 @@ const PERKS = [
 ];
 
 export default function SumateSection({ onOpenRegister }) {
+  const [comentario, setComentario] = useState('');
+  const [mensajeEnviado, setMensajeEnviado] = useState(false);
+
+  const handleEnviarComentario = (e) => {
+    e.preventDefault();
+    if (comentario.trim().length > 0) {
+      setMensajeEnviado(true);
+      // No cerramos nada, solo mostramos que se envió
+    }
+  };
+
   return (
     <section className="landing-signup" id="inscripcion">
       <div className="landing-shell">
         <div className="text-center">
-          <p className="landing-eyebrow mx-auto justify-center text-[var(--blue)]">
-            Súmate al movimiento
+          {/* 🔹 NUEVO TEXTO MÁS GRANDE Y VERDE AZULADO */}
+          <p className="text-4xl md:text-5xl font-extrabold text-cyan-400 drop-shadow-lg mb-2">
+            Sobrino es crucial unirte al grupo de WhatsApp
           </p>
-          <h2 className="mb-3 font-[var(--serif)] text-[clamp(27px,7vw,36px)] font-semibold text-[var(--blue-deep)]">
-            Inscríbete en dos pasos
-          </h2>
-          <p className="mx-auto max-w-[560px] text-[15.5px] text-[var(--ink-2)]">
+          <p className="text-white/70 text-sm mb-6">
             Únete a nuestro grupo de WhatsApp y completa tu registro. Así recibirás avisos y
             podrás participar activamente en el movimiento.
           </p>
@@ -38,16 +48,43 @@ export default function SumateSection({ onOpenRegister }) {
         </div>
 
         <div className="mx-auto mt-9 max-w-md">
+          {/* 🔹 PASO 1 - WHATSAPP CON COMENTARIO */}
           <div className="rounded-2xl border border-[var(--line)] bg-slate-900/50 p-6 shadow-sm backdrop-blur">
             <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full border-2 border-[var(--accent-green)] bg-[var(--accent-green)]/10 text-sm font-bold text-[var(--accent-green)]">
               1
             </div>
             <h3 className="mb-2 font-[var(--serif)] text-xl font-semibold text-white">
-              Únete al grupo de WhatsApp
+              Sobrino es crucial unirte al grupo de WhatsApp
             </h3>
             <p className="mb-4 text-sm text-white/70">
               Ahí compartimos avisos, actividades y novedades del movimiento.
             </p>
+
+            {/* 🔹 CAMPO DE COMENTARIO */}
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-white mb-2">
+                Tu opinión importa, el tío Charles toma nota
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={comentario}
+                  onChange={(e) => setComentario(e.target.value)}
+                  placeholder="Escribe tu comentario..."
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-white/30 focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-400/20"
+                />
+                <button
+                  onClick={handleEnviarComentario}
+                  className="px-4 py-2 bg-green-500 text-white rounded-xl font-semibold text-sm hover:bg-green-600 transition"
+                >
+                  Enviar
+                </button>
+              </div>
+              {mensajeEnviado && (
+                <p className="text-xs text-green-400 mt-1">✅ Comentario enviado, sobrino</p>
+              )}
+            </div>
+
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -59,8 +96,12 @@ export default function SumateSection({ onOpenRegister }) {
               </svg>
               Unirme al grupo de WhatsApp
             </a>
+            <p className="text-xs text-white/40 mt-2 text-center">
+              Al unirte aceptas las políticas del movimiento.
+            </p>
           </div>
 
+          {/* 🔹 PASO 2 - FORMULARIO */}
           <div className="mt-5 rounded-2xl border border-[var(--line)] bg-slate-900/50 p-6 shadow-sm backdrop-blur">
             <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full border-2 border-[var(--accent-green)] text-sm font-bold text-[var(--accent-green)]">
               2
@@ -82,7 +123,6 @@ export default function SumateSection({ onOpenRegister }) {
         </div>
       </div>
 
-      {/* ========== ESTILOS NUEVOS ========== */}
       <style>{`
         .landing-signup .landing-eyebrow {
           color: var(--accent-green) !important;
