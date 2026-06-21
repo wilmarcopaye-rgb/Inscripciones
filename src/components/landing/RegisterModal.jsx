@@ -182,7 +182,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                     <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="h-12 w-12 object-cover" />
                   </div>
                   <div>
-                    <h2 className="font-bebas text-xl leading-tight text-white">Inscripción Estudiantil</h2>
+                    <h2 className="font-bebas text-xl leading-tight text-white">inscripción estudiantil</h2>
                     <p className="font-poppins text-xs text-white/50">El 2 de julio apoya al TODOS UNA</p>
                   </div>
                 </div>

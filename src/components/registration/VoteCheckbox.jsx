@@ -4,39 +4,30 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
     purple: {
       border: 'border-purple-500',
       bg: 'bg-purple-500/80',
-      bgLight: 'bg-purple-500/20', // fondo iluminado cuando está seleccionado
       text: 'text-purple-500',
       checkBg: 'bg-purple-500',
       checkBorder: 'border-purple-500',
-      glow: 'shadow-purple-500/30',
+      glow: 'shadow-[0_0_20px_rgba(168,85,247,0.6)]', // morado brillante
     },
-    cyan: {
-      border: 'border-cyan-500',
-      bg: 'bg-cyan-500/80',
-      bgLight: 'bg-cyan-500/20',
-      text: 'text-cyan-500',
-      checkBg: 'bg-cyan-500',
-      checkBorder: 'border-cyan-500',
-      glow: 'shadow-cyan-500/30',
+    red: { // cambiamos de 'cyan' a 'red'
+      border: 'border-red-500',
+      bg: 'bg-red-500/80',
+      text: 'text-red-500',
+      checkBg: 'bg-red-500',
+      checkBorder: 'border-red-500',
+      glow: 'shadow-[0_0_20px_rgba(239,68,68,0.6)]', // rojo brillante
     },
   };
 
   const colors = colorMap[color] || colorMap.purple;
 
   return (
-    <div
-      className={`
-        flex items-center gap-4 cursor-pointer group rounded-xl p-3 transition-all duration-200
-        ${checked ? `${colors.bgLight} border-2 ${colors.border} shadow-md ${colors.glow}` : 'border-2 border-transparent hover:border-white/10'}
-      `}
-      onClick={onChange}
-    >
-      {/* Cuadrado con número y X superpuesta */}
+    <div className="flex items-center gap-4 cursor-pointer group" onClick={onChange}>
       <div className="flex-shrink-0">
         <div
           className={`
             w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all relative
-            ${checked ? `${colors.bg} ${colors.border}` : `${colors.border} bg-transparent`}
+            ${checked ? `${colors.bg} ${colors.border} ${colors.glow}` : `${colors.border} bg-transparent`}
             ${!checked && colors.hover}
           `}
         >
@@ -51,22 +42,20 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
         </div>
       </div>
 
-      {/* Texto de la opción */}
       <div className="flex-1">
         <p className="font-poppins text-sm text-white font-medium">{label}</p>
         <p className="font-poppins text-xs text-white/50">{description}</p>
       </div>
 
-      {/* Check circular a la derecha */}
       <div className="flex-shrink-0">
         {checked ? (
-          <div className={`w-6 h-6 rounded-full ${colors.checkBg} border-2 ${colors.checkBorder} flex items-center justify-center shadow-md`}>
+          <div className={`w-6 h-6 rounded-full ${colors.checkBg} border-2 ${colors.checkBorder} flex items-center justify-center`}>
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
             </svg>
           </div>
         ) : (
-          <div className="w-6 h-6 rounded-full border-2 border-white/30 bg-transparent group-hover:border-white/60 transition-colors"></div>
+          <div className="w-6 h-6 rounded-full border-2 border-white/30 bg-transparent"></div>
         )}
       </div>
     </div>
