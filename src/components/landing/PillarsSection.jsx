@@ -1,33 +1,19 @@
-import { PILARES } from '../../lib/content'
+import { PILARES } from '../../lib/content';
 
 const ICONS = {
   book: (
-    <>
-      <path d="M4 5a2 2 0 0 1 2-2h7v16H6a2 2 0 0 0-2 2V5z" />
-      <path d="M20 3v18a2 2 0 0 0-2-2h-5V3h5a2 2 0 0 1 2 2z" />
-    </>
+    <path d="M4 5a2 2 0 0 1 2-2h7v16H6a2 2 0 0 0-2 2V5z M20 3v18a2 2 0 0 0-2-2h-5V3h5a2 2 0 0 1 2 2z" />
   ),
   heart: (
-    <>
-      <path d="M12 21s-7-4.4-7-10a7 7 0 0 1 14 0c0 5.6-7 10-7 10z" />
-      <circle cx="12" cy="11" r="2.4" />
-    </>
+    <path d="M12 21s-7-4.4-7-10a7 7 0 0 1 14 0c0 5.6-7 10-7 10z M12 11a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8z" />
   ),
   lab: (
-    <>
-      <path d="M9 3v6l-5 9a2 2 0 0 0 1.8 3h12.4a2 2 0 0 0 1.8-3l-5-9V3" />
-      <path d="M7 3h10" />
-    </>
+    <path d="M9 3v6l-5 9a2 2 0 0 0 1.8 3h12.4a2 2 0 0 0 1.8-3l-5-9V3 M7 3h10" />
   ),
   scale: (
-    <>
-      <path d="M12 3v18" />
-      <path d="M5 7h14" />
-      <path d="M5 7l-2 6a3 3 0 0 0 6 0L7 7" />
-      <path d="M17 7l-2 6a3 3 0 0 0 6 0l-2-6" />
-    </>
+    <path d="M12 3v18 M5 7h14 M5 7l-2 6a3 3 0 0 0 6 0L7 7 M17 7l-2 6a3 3 0 0 0 6 0l-2-6" />
   ),
-}
+};
 
 export default function PillarsSection() {
   return (
@@ -58,6 +44,31 @@ export default function PillarsSection() {
           ))}
         </div>
       </div>
+
+      {/* ========== ESTILOS NUEVOS ========== */}
+      <style>{`
+        .landing-section.tint .landing-eyebrow {
+          color: var(--accent-green) !important;
+        }
+        .landing-section.tint .landing-eyebrow::before {
+          background: var(--accent-green) !important;
+        }
+        .landing-pillar {
+          border-color: var(--accent-green) !important;
+        }
+        .landing-pillar:hover {
+          border-color: var(--dark-green) !important;
+        }
+        .landing-pillar .bg-\\[var\\(--navy\\)\\] {
+          background: var(--secondary-purple) !important; /* ajusta según necesites */
+        }
+        .landing-pillar .stroke-\\[var\\(--sky\\)\\] {
+          stroke: var(--accent-green) !important;
+        }
+        .landing-pillar h3 {
+          color: var(--primary-bg) !important;
+        }
+      `}</style>
     </section>
-  )
+  );
 }

@@ -1,32 +1,61 @@
+/* Importación de fuentes (ya la tienes) */
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
 
 @import 'tailwindcss';
 
+/* ********** NUEVAS VARIABLES GLOBALES (para la nueva guía) ********** */
+:root {
+  /* Nueva paleta institucional – solo para componentes que quieras actualizar */
+  --primary-bg: #3D1F7A;
+  --secondary-purple: #5B2D9E;
+  --accent-green: #2EBD8E;
+  --dark-green: #1A9A72;
+  --body-bg: #FFFFFF;
+  --body-text: #1A1A1A;
+  --font-sans: 'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ********** ESTILOS EXISTENTES (NO BORRAR) ********** */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(-20px); opacity: 0; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); }
+}
+
 .landing-page {
-  --navy: #0e2c4c;
-  --navy-2: #143a61;
-  --blue: #1e5f93;
-  --blue-deep: #14375a;
-  --azure: #2f93d6;
-  --azure-deep: #2479b4;
-  --azure-soft: rgba(47, 147, 214, 0.14);
-  --teal: #0f8a8c;
-  --teal-deep: #0b6e70;
-  --teal-soft: rgba(15, 138, 140, 0.1);
-  --sky: #9fd3f2;
-  --paper: #eef3f8;
-  --paper-2: #e3ecf3;
+  --purple: #7c3aed;
+  --purple-dark: #6d28d9;
+  --purple-light: #a855f7;
+  --purple-pale: #ddd6fe;
+  --teal: #06b6d4;
+  --teal-light: #22d3ee;
+  --teal-dark: #0891b2;
+  --pink: #ec4899;
+  --pink-light: #f472b6;
+  --pink-pale: #fbcfe8;
+  --white: #ffffff;
+  --white-soft: rgba(255, 255, 255, 0.95);
+  --dark: #1a1a2e;
+  --dark-2: #16213e;
+  --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #06b6d4 50%, #ec4899 100%);
+  --gradient-secondary: linear-gradient(135deg, #a855f7 0%, #22d3ee 50%, #f472b6 100%);
+  --paper: #f8f6ff;
   --card: #ffffff;
-  --ink: #15212e;
-  --ink-2: rgba(21, 33, 46, 0.66);
-  --ink-3: rgba(21, 33, 46, 0.42);
-  --line: rgba(21, 33, 46, 0.1);
-  --line-2: rgba(21, 33, 46, 0.18);
-  --on-navy: #e9f1fa;
-  --on-navy-2: rgba(233, 241, 250, 0.74);
-  --serif: 'Fraunces', Georgia, serif;
-  --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --ink: #1a1a2e;
+  --line: rgba(26, 26, 46, 0.1);
   --radius: 16px;
   --maxw: 660px;
 
@@ -34,7 +63,12 @@
   color: var(--ink);
   font-family: var(--sans);
   line-height: 1.6;
+  --sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --serif: 'Fraunces', Georgia, serif;
 }
+
+/* El resto de tus estilos (clases .landing-shell, .landing-topbar, etc.) continúan igual */
+/* ... todo lo que ya tenías ... */
 
 .landing-shell {
   max-width: var(--maxw);
@@ -46,8 +80,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: radial-gradient(120% 90% at 85% -10%, rgba(159, 211, 242, 0.08), transparent 60%),
-              linear-gradient(165deg, rgba(14, 44, 76, 0.95) 0%, rgba(12, 36, 63, 0.95) 70%, rgba(8, 26, 48, 0.95) 100%);
+  background: rgba(45, 27, 105, 0.98);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
@@ -57,7 +90,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: 16.5px;
-  color: var(--navy);
+  color: #7c3aed;
   line-height: 1.05;
 }
 
@@ -66,9 +99,9 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--blue-deep);
-  border: 1.5px solid var(--azure);
-  background: var(--azure-soft);
+  color: #7c3aed;
+  border: 1.5px solid #7c3aed;
+  background: rgba(124, 58, 237, 0.1);
   padding: 5px 11px;
   border-radius: 999px;
 }
@@ -76,11 +109,9 @@
 .landing-hero {
   position: relative;
   overflow: hidden;
-  color: var(--on-navy);
+  color: #ffffff;
   padding: 64px 0 56px;
-  background:
-    radial-gradient(120% 90% at 85% -10%, rgba(159, 211, 242, 0.18), transparent 60%),
-    linear-gradient(165deg, var(--navy) 0%, #0c243f 70%, #081a30 100%);
+  background: #1a1a2e;
 }
 
 .landing-eyebrow {
@@ -91,7 +122,7 @@
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--sky);
+  color: #a855f7;
   margin-bottom: 20px;
 }
 
@@ -99,7 +130,7 @@
   content: '';
   width: 22px;
   height: 1.5px;
-  background: var(--azure);
+  background: #a855f7;
 }
 
 .landing-hero h1 {
@@ -109,11 +140,12 @@
   line-height: 1.02;
   letter-spacing: -0.02em;
   margin: 0 0 18px;
+  color: #7c3aed;
 }
 
 .landing-hero h1 em {
   font-style: italic;
-  color: var(--sky);
+  color: #06b6d4;
   font-weight: 500;
 }
 
@@ -133,25 +165,27 @@
 }
 
 .landing-btn-primary {
-  background: var(--azure);
+  background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 50%, #ec4899 100%);
   color: #fff;
-  box-shadow: 0 8px 22px -10px rgba(47, 147, 214, 0.85);
+  box-shadow: 0 8px 22px -10px rgba(124, 58, 237, 0.85);
 }
 
 .landing-btn-primary:hover {
-  background: #3aa0e2;
+  background: linear-gradient(135deg, #8b5cf6 0%, #22d3ee 50%, #f472b6 100%);
   transform: translateY(-2px);
+  box-shadow: 0 12px 28px -10px rgba(124, 58, 237, 0.95);
 }
 
 .landing-btn-ghost {
   background: transparent;
-  color: var(--on-navy);
-  border: 1.5px solid rgba(233, 241, 250, 0.4);
+  color: #ffffff;
+  border: 1.5px solid rgba(168, 85, 247, 0.4);
   font-weight: 600;
 }
 
 .landing-btn-ghost:hover {
-  border-color: var(--on-navy);
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.1);
   transform: translateY(-2px);
 }
 
@@ -167,7 +201,7 @@
   font-family: var(--serif);
   font-size: clamp(21px, 5.5vw, 28px);
   line-height: 1.32;
-  color: var(--ink);
+  color: #7c3aed;
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -182,8 +216,8 @@
 
 .landing-pillar:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 34px -22px rgba(14, 44, 76, 0.45);
-  border-color: var(--azure);
+  box-shadow: 0 16px 34px -22px rgba(124, 58, 237, 0.45);
+  border-color: #7c3aed;
 }
 
 .landing-signup {
@@ -192,15 +226,15 @@
 }
 
 .landing-footer {
-  background: var(--navy);
-  color: var(--on-navy);
+  background: #1a1a2e;
+  color: #ffffff;
   padding: 46px 0 38px;
 }
 
 .register-page {
   font-family: 'Poppins', system-ui, sans-serif;
   min-height: 100vh;
-  background: radial-gradient(ellipse at top, #1e3a5f 0%, #0a0f1e 50%, #1a0a2e 100%);
+  background: #1a1a2e;
 }
 
 .font-bebas {
@@ -209,4 +243,111 @@
 
 .font-poppins {
   font-family: 'Poppins', sans-serif;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: #3D1F7A; /* morado profundo */
+  border-bottom: 2px solid #2EBD8E; /* línea verde de acento */
+  padding: 12px 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.topbar-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Logo */
+.topbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: 2px solid #2EBD8E;
+  border-radius: 999px;
+  padding: 6px 16px 6px 12px;
+  color: white;
+}
+
+.brand-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: white;
+}
+
+/* Navegación */
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: #2EBD8E;
+}
+
+.btn-inscribirme {
+  background-color: #2EBD8E;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 24px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.btn-inscribirme:hover {
+  background-color: #1A9A72;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .topbar-shell {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .topbar-nav {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .brand-text {
+    font-size: 12px;
+  }
 }

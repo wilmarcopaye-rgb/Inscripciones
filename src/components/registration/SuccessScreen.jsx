@@ -95,22 +95,26 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
     <div className="space-y-6">
       {/* Sección de éxito */}
       <div className="text-center">
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-yellow-400/60 bg-yellow-400/10">
-          <svg className="h-10 w-10 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border-2 border-purple-500/60 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+          <svg className="h-10 w-10 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
 
-        <h2 className="font-bebas text-3xl tracking-wide text-white">¡Inscripción exitosa!</h2>
+        <h2 className="font-bebas text-3xl tracking-wide bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          ¡Inscripción exitosa!
+        </h2>
         <p className="mt-4 font-poppins text-sm leading-relaxed text-white/80">
-          Gracias, <strong className="text-yellow-400">{nombreTemp}</strong>. Tu registro ha sido guardado correctamente.
+          Gracias, <strong className="text-purple-400">{nombreTemp}</strong>. Este 2 de julio somos todos juntos por la UNA 💜
         </p>
       </div>
 
       {/* Sección de comentarios */}
       {!comentarioEnviado ? (
         <div className="border-t border-white/10 pt-6">
-          <p className="mb-4 font-bebas text-sm tracking-wider text-yellow-400">TU COMENTARIO</p>
+          <p className="mb-4 font-bebas text-sm tracking-wider bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            TU COMENTARIO
+          </p>
           <form onSubmit={handleGuardarComentario} className="space-y-3">
             <textarea
               id="comentario"

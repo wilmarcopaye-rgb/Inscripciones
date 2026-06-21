@@ -1,8 +1,8 @@
 const COLORS = {
-  yellow: {
-    border: 'border-yellow-400/50',
-    active: 'border-yellow-400 bg-yellow-400/10 ring-yellow-400/30',
-    badge: 'bg-yellow-400 text-slate-900',
+  purple: {
+    border: 'border-purple-500/50',
+    active: 'border-purple-500 bg-purple-500/10 ring-purple-500/30',
+    badge: 'bg-gradient-to-br from-purple-500 to-purple-600 text-white',
   },
   cyan: {
     border: 'border-cyan-400/50',
@@ -11,8 +11,8 @@ const COLORS = {
   },
 }
 
-export default function VoteCheckbox({ number, label, description, checked, onChange, color = 'yellow' }) {
-  const palette = COLORS[color] ?? COLORS.yellow
+export default function VoteCheckbox({ number, label, description, checked, onChange, color = 'purple' }) {
+  const palette = COLORS[color] ?? COLORS.purple
 
   return (
     <label
@@ -28,9 +28,9 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
         className="mt-1 h-4 w-4 shrink-0"
       />
       <span
-        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-bebas text-lg ${palette.badge}`}
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-bebas text-lg font-bold ${palette.badge}`}
       >
-        {number}
+        {checked ? '✕' : number}
       </span>
       <span>
         <span className="block font-poppins text-sm font-semibold text-white">{label}</span>

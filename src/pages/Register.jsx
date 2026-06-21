@@ -123,20 +123,20 @@ export default function Register() {
         <div
           className="rounded-2xl p-6"
           style={{
-            background: 'rgba(255,255,255,0.05)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(236, 72, 153, 0.1) 100%)',
+            border: '1px solid rgba(124, 58, 237, 0.3)',
             backdropFilter: 'blur(20px)',
           }}
         >
           <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-yellow-400/40 bg-yellow-400/20">
-              <svg className="h-5 w-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-purple-500/40 bg-gradient-to-br from-purple-500 to-purple-600">
+              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
             </div>
             <div>
               <h2 className="font-bebas text-2xl leading-none text-white">Inscripción Estudiantil</h2>
-              <p className="font-poppins text-xs text-white/50">Completa tus datos para inscribirte</p>
+              <p className="font-poppins text-xs text-white/60">Inscríbete y gana grandes premios 🎁</p>
             </div>
           </div>
 
@@ -148,7 +148,7 @@ export default function Register() {
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
             <div>
-              <p className="mb-3 font-bebas text-lg tracking-wide text-yellow-400">
+              <p className="mb-3 font-bebas text-lg tracking-wide bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 PREGUNTAS DE VOTACIÓN
               </p>
               <div className="space-y-3">
@@ -158,12 +158,12 @@ export default function Register() {
                   description="Marca el cuadro con el número 1"
                   checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                   onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
-                  color="yellow"
+                  color="purple"
                 />
                 <VoteCheckbox
-                  number="7"
-                  label="Somos Estudiantil"
-                  description="Marca el cuadro con el número 7"
+                  number="9"
+                  label="🚫 NO al continuismo - ALTO a la corrupción"
+                  description="Marca el cuadro con el número 9"
                   checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
                   onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
                   color="cyan"
@@ -175,21 +175,21 @@ export default function Register() {
             </div>
 
             {voteSuccess && (
-              <div className="rounded-xl border-2 border-yellow-400/60 bg-yellow-400/10 p-4 text-center">
-                <p className="font-bebas text-xl text-yellow-400">¡FELICIDADES POR TU BUENA ELECCIÓN!</p>
+              <div className="rounded-xl border-2 border-purple-500/60 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-4 text-center">
+                <p className="font-bebas text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  ¡FELICIDADES POR TU BUENA ELECCIÓN!
+                </p>
                 <p className="mt-1 font-poppins text-sm text-white/80">
-                  Gracias por apoyar a{' '}
-                  <span className="font-bold text-yellow-400">Todos Juntos por la UNA</span> 💛
+                  Este <span className="font-bold text-purple-400">2 de julio</span> somos todos juntos por la UNA 💜
                 </p>
               </div>
             )}
 
             {voteWarning && (
               <div className="rounded-xl border-2 border-red-500/60 bg-red-500/10 p-4 text-center">
-                <p className="font-bebas text-xl text-red-400">¡NO POR LOS CORRUPTOS!</p>
+                <p className="font-bebas text-xl text-red-400">🚫 ¡NO POR LOS CORRUPTOS!</p>
                 <p className="mt-1 font-poppins text-sm text-white/80">
-                  Marca el <span className="font-bold text-yellow-400">CASILLA 1</span> — Todo con la
-                  verdad 💛
+                  Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 💜
                 </p>
               </div>
             )}
@@ -222,10 +222,10 @@ export default function Register() {
                       setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
                       setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }))
                     }}
-                    className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition ${
+                    className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition font-semibold ${
                       tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA
-                        ? 'bg-yellow-400 text-slate-900 font-semibold'
-                        : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                        : 'border border-purple-400/30 bg-purple-500/5 text-white hover:bg-purple-500/10'
                     }`}
                   >
                     CÓDIGO MATRÍCULA
@@ -236,10 +236,10 @@ export default function Register() {
                       setTipoIdentificacion(TIPOS_IDENTIFICACION.DNI)
                       setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }))
                     }}
-                    className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition ${
+                    className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition font-semibold ${
                       tipoIdentificacion === TIPOS_IDENTIFICACION.DNI
-                        ? 'bg-yellow-400 text-slate-900 font-semibold'
-                        : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                        ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white'
+                        : 'border border-teal-400/30 bg-teal-500/5 text-white hover:bg-teal-500/10'
                     }`}
                   >
                     DNI
@@ -343,10 +343,10 @@ export default function Register() {
             <button
               type="submit"
               disabled={enviando || !supabaseConfigurado()}
-              className="font-bebas h-12 w-full rounded-xl text-xl tracking-wider text-slate-900 transition disabled:cursor-not-allowed disabled:opacity-50"
+              className="font-bebas h-12 w-full rounded-xl text-xl tracking-wider text-white transition disabled:cursor-not-allowed disabled:opacity-50 font-bold"
               style={{
-                background: 'hsl(48 100% 50%)',
-                boxShadow: '0 0 20px hsl(48 100% 50% / 0.3)',
+                background: '#06b6d4',
+                boxShadow: '0 0 30px rgba(6, 182, 212, 0.5)',
               }}
             >
               {enviando ? 'Enviando…' : 'INSCRIBIRME AHORA'}

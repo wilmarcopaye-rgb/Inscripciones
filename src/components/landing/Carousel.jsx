@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { CARRUSEL_SLIDES } from '../../lib/content'
+import { useState } from 'react';
+import { CARRUSEL_SLIDES } from '../../lib/content';
 
 export default function Carousel() {
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(0);
 
-  const prev = () => setIndex((i) => (i - 1 + CARRUSEL_SLIDES.length) % CARRUSEL_SLIDES.length)
-  const next = () => setIndex((i) => (i + 1) % CARRUSEL_SLIDES.length)
+  const prev = () => setIndex((i) => (i - 1 + CARRUSEL_SLIDES.length) % CARRUSEL_SLIDES.length);
+  const next = () => setIndex((i) => (i + 1) % CARRUSEL_SLIDES.length);
 
   return (
     <div className="relative mt-10 overflow-hidden rounded-2xl border border-white/20 shadow-2xl">
@@ -54,12 +54,12 @@ export default function Carousel() {
             type="button"
             aria-label={`Imagen ${i + 1}`}
             className={`h-2 rounded-full border-none p-0 transition-all ${
-              i === index ? 'w-5 bg-[var(--azure)]' : 'w-2 bg-white/55'
+              i === index ? 'w-5 bg-[var(--accent-green)]' : 'w-2 bg-white/55' // NUEVO: usa --accent-green
             }`}
             onClick={() => setIndex(i)}
           />
         ))}
       </div>
     </div>
-  )
+  );
 }

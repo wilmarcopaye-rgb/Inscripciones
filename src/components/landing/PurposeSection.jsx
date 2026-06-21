@@ -1,4 +1,3 @@
-// src/components/landing/PurposeSection.jsx
 export default function PurposeSection() {
   return (
     <section className="landing-section">
@@ -14,6 +13,19 @@ export default function PurposeSection() {
           universidad — hagámoslo juntos.
         </p>
       </div>
+
+      {/* ========== ESTILOS NUEVOS (ajustar colores) ========== */}
+      <style>{`
+        .landing-section .landing-eyebrow {
+          color: var(--accent-green) !important;
+        }
+        .landing-section .landing-eyebrow::before {
+          background: var(--accent-green) !important;
+        }
+        .landing-section .landing-lede strong {
+          color: var(--secondary-purple) !important; /* o el que prefieras */
+        }
+      `}</style>
     </section>
-  )
+  );
 }

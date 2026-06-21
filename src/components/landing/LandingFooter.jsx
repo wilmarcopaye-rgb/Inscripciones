@@ -1,8 +1,14 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export default function LandingFooter() {
   return (
     <footer className="landing-footer">
+      {/* Onda SVG */}
+      <div className="footer-wave">
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+          <path d="M0,0 C300,60 600,0 900,40 C1050,60 1150,30 1200,20 L1200,60 L0,60 Z" fill="#FFFFFF" />
+        </svg>
+      </div>
       <div className="landing-shell">
         <h3 className="mb-1.5 font-[var(--serif)] text-2xl font-semibold">
           Todos juntos por la <span className="text-[var(--sky)]">UNA</span>
@@ -25,6 +31,27 @@ export default function LandingFooter() {
           </Link>
         </div>
       </div>
+
+      {/* ========== ESTILOS NUEVOS ========== */}
+      <style>{`
+        .landing-footer {
+          background-color: var(--accent-green) !important;
+        }
+        .landing-footer .text-\\[var\\(--sky\\)\\] {
+          color: var(--primary-bg) !important;
+        }
+        .landing-footer .border-white\\/15 {
+          border-color: rgba(255,255,255,0.2) !important;
+        }
+        .footer-wave svg {
+          display: block;
+          width: 100%;
+          height: 50px;
+        }
+        .landing-footer .text-\\[var\\(--on-navy-2\\)\\] {
+          color: rgba(255,255,255,0.9) !important;
+        }
+      `}</style>
     </footer>
-  )
+  );
 }

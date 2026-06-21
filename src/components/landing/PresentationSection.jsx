@@ -1,3 +1,4 @@
+// src/components/landing/PresentationSection.jsx
 export default function PresentationSection() {
   const propuestas_principales = [
     {
@@ -24,7 +25,7 @@ export default function PresentationSection() {
       descripcion:
         'Apoyar actividades culturales, artísticas y deportivas que fortalezcan la vida universitaria, con espacios adecuados.',
     },
-  ]
+  ];
 
   const propuestas_areas = [
     {
@@ -59,203 +60,415 @@ export default function PresentationSection() {
         'Bolsa de empleo estudiantil y ferias laborales de inserción.',
       ],
     },
-  ]
+  ];
 
+  // Directivos con apodos
   const directivos = [
-    {
-      nombre: 'Dr. Charles Mendoza',
-      cargo: 'RECTOR',
-    },
-    {
-      nombre: 'Dr. Efraín Yupanqui',
-      cargo: 'Vicerrector Académico',
-    },
-    {
-      nombre: 'Dr. Bernardo Roque',
-      cargo: 'Vicerrector de Investigación',
-    },
-  ]
+    { nombre: 'Dr. Charles Mendoza', apodo: 'tío Charles', cargo: 'RECTOR' },
+    { nombre: 'Dr. Efraín Yupanqui', apodo: 'fire', cargo: 'Vicerrector Académico' },
+    { nombre: 'Dr. Bernardo Roque', apodo: 'maestro roshi', cargo: 'Vicerrector de Investigación' },
+  ];
 
   return (
-    <section id="propuestas" className="landing-presentation">
-      {/* Parte superior: Presentación y Logo */}
+    <section id="propuestas" className="presentation">
       <div className="landing-shell">
-        <div className="mb-16 grid gap-8 md:grid-cols-2 lg:gap-12">
-          {/* Columna izquierda: Contenido textual */}
-          <div className="flex flex-col justify-center">
-            <div className="mb-8">
-              <p className="landing-eyebrow mb-6">Movimiento estudiantil</p>
-              <h2 className="font-bebas text-4xl md:text-5xl tracking-wider text-white mb-4">
-                TODOS JUNTOS
-                <br />
-                POR LA UNA
-              </h2>
-              <p className="font-bebas text-lg text-yellow-400 mb-6 tracking-widest">
-                Transparencia • Innovación • Honestidad
-              </p>
-            </div>
+        {/* Presentación y Logo */}
+        <div className="presentation-grid">
+          <div className="presentation-text">
+            <span className="eyebrow">Movimiento estudiantil</span>
+            <h2>TODOS JUNTOS POR LA UNA</h2>
+            <p className="slogan">Transparencia • Innovación • Honestidad</p>
 
-            {/* Directivos */}
-            <div className="mb-8 space-y-3 border-l-2 border-yellow-400 pl-4">
+            {/* Directivos con apodos */}
+            <div className="directivos">
               {directivos.map((dir, idx) => (
-                <div key={idx}>
-                  <p className="font-bebas text-lg text-yellow-400">{dir.nombre}</p>
-                  <p className="font-poppins text-sm text-white/70">{dir.cargo}</p>
+                <div key={idx} className="directivo">
+                  <span className="directivo-nombre">
+                    {dir.nombre}
+                    <span className="directivo-apodo">"{dir.apodo}"</span>
+                  </span>
+                  <span className="directivo-cargo">{dir.cargo}</span>
                 </div>
               ))}
             </div>
 
-            <p className="font-poppins text-white/80 leading-relaxed mb-6">
+            <p className="presentation-message">
               Así como en nuestras comunidades el trabajo se hace con Minka, la universidad debe
               construirse con participación y transparencia.
             </p>
 
-            <div className="inline-flex items-center gap-2 rounded-lg bg-yellow-400/20 px-4 py-2 w-fit border border-yellow-400/40">
-              <span className="font-bebas text-lg text-yellow-400">¡LO QUE SE DICE SE CUMPLE!</span>
+            <div className="presentation-badge">
+              <span>¡LO QUE SE DICE SE CUMPLE!</span>
             </div>
           </div>
 
-          {/* Columna derecha: Imagen/Espacio para foto del partido */}
-          <div className="relative">
-            <div
-              className="relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-yellow-400/40 flex items-center justify-center"
-              style={{
-                background:
-                  'linear-gradient(135deg, rgba(234, 179, 8, 0.1) 0%, rgba(34, 197, 94, 0.05) 100%)',
-                backdropFilter: 'blur(10px)',
-              }}
-            >
-              {/* Aquí irá la foto del partido - placeholder */}
-              <div className="text-center">
-                <div className="mb-4 flex justify-center">
-                  <div className="rounded-full bg-yellow-400/20 p-6 border-2 border-yellow-400/40">
-                    <svg
-                      className="h-16 w-16 text-yellow-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <p className="font-poppins text-sm text-white/50 mb-2">Espacio para foto</p>
-                <p className="font-poppins text-xs text-white/40">del movimiento estudiantil</p>
-              </div>
-
-              {/* Elemento decorativo */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-20"
-                style={{
-                  background:
-                    'radial-gradient(circle at 100% 0%, rgba(234, 179, 8, 0.3) 0%, transparent 70%)',
-                }}
+          {/* Columna derecha: imagen 3.png */}
+          <div className="presentation-image">
+            <div className="image-container">
+              <img
+                src="/3.png"
+                alt="Movimiento estudiantil"
+                className="foto-movimiento"
               />
+              <div className="image-overlay">
+                <p>Movimiento estudiantil</p>
+                <small>Todos juntos por la UNA</small>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Propuestas principales */}
-      <div className="landing-shell mb-16">
-        <h3 className="font-bebas text-3xl text-white mb-10 tracking-wide">Propuestas principales</h3>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {propuestas_principales.map((prop, idx) => (
-            <div
-              key={idx}
-              className="rounded-xl p-6 backdrop-blur-sm border border-white/10 hover:border-yellow-400/50 transition-all duration-300 hover:bg-white/5"
-              style={{
-                background: 'rgba(255, 255, 255, 0.02)',
-              }}
-            >
-              <div className="mb-4">
-                <span className="font-bebas text-4xl text-yellow-400 leading-none">
-                  {prop.numero}
-                </span>
+        {/* Propuestas principales */}
+        <div className="propuestas-principales">
+          <h3>Propuestas principales</h3>
+          <div className="propuestas-grid">
+            {propuestas_principales.map((prop, idx) => (
+              <div key={idx} className="propuesta-card">
+                <span className="propuesta-numero">{prop.numero}</span>
+                <h4>{prop.titulo}</h4>
+                <p>{prop.descripcion}</p>
               </div>
-              <h4 className="font-bebas text-lg text-white mb-3 tracking-wider leading-tight">
-                {prop.titulo}
-              </h4>
-              <p className="font-poppins text-sm text-white/70 leading-relaxed">
-                {prop.descripcion}
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Propuestas por áreas */}
-      <div className="landing-shell">
-        <h3 className="font-bebas text-3xl text-white mb-10 tracking-wide">Propuestas por áreas</h3>
-
-        <div className="grid gap-8 md:grid-cols-2">
-          {propuestas_areas.map((area, idx) => (
-            <div
-              key={idx}
-              className="rounded-xl p-6 backdrop-blur-sm border border-white/10 hover:border-yellow-400/50 transition-all duration-300"
-              style={{
-                background: 'rgba(255, 255, 255, 0.02)',
-              }}
-            >
-              <h4 className="font-bebas text-xl text-yellow-400 mb-4 tracking-wider uppercase">
-                {area.area}
-              </h4>
-              <ul className="space-y-3">
-                {area.propuestas.map((prop, pIdx) => (
-                  <li key={pIdx} className="flex gap-3">
-                    <div className="mt-1 flex-shrink-0">
-                      <div className="h-1.5 w-1.5 rounded-full bg-yellow-400" />
-                    </div>
-                    <span className="font-poppins text-sm text-white/80 leading-relaxed">
-                      {prop}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Footer de la sección */}
-      <div className="landing-shell mt-16 py-8 border-t border-white/10">
-        <div className="text-center space-y-4">
-          <p className="font-poppins text-sm text-white/70">
-            Por un smart campus y gestión universitaria cero papel.
-          </p>
-          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <p className="font-bebas text-2xl text-white">Este 2 de Julio Vota por:</p>
-            <div className="flex items-center gap-4">
-              <span className="font-bebas text-sm text-white/70">(Logo "TODOS JUNTOS POR LA UNA")</span>
-              <div className="flex items-center justify-center w-12 h-12 rounded-lg border-2 border-yellow-400 bg-yellow-400/10">
-                <span className="font-bebas text-2xl text-yellow-400">1</span>
+        {/* Propuestas por áreas */}
+        <div className="propuestas-areas">
+          <h3>Propuestas por áreas</h3>
+          <div className="areas-grid">
+            {propuestas_areas.map((area, idx) => (
+              <div key={idx} className="area-card">
+                <h4>{area.area}</h4>
+                <ul>
+                  {area.propuestas.map((prop, pIdx) => (
+                    <li key={pIdx}>{prop}</li>
+                  ))}
+                </ul>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Cierre */}
+        <div className="presentation-footer">
+          <p>Por un smart campus y gestión universitaria cero papel.</p>
+          <div className="footer-cta">
+            <span>Este 2 de Julio Vota por:</span>
+            <div className="vota-badge">
+              <span>(Logo "TODOS JUNTOS POR LA UNA")</span>
+              <div className="numero-circulo">1</div>
             </div>
           </div>
         </div>
       </div>
 
       <style>{`
-        .landing-presentation {
+        .presentation {
+          background: white;
+          color: #1A1A1A;
+          padding: 64px 0;
+          font-family: 'Montserrat', sans-serif;
+        }
+
+        .landing-shell {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 24px;
+        }
+
+        .presentation-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 48px;
+          margin-bottom: 64px;
+        }
+
+        .eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #2EBD8E;
+          margin-bottom: 16px;
+        }
+
+        .eyebrow::before {
+          content: '';
+          width: 24px;
+          height: 2px;
+          background: #2EBD8E;
+        }
+
+        .presentation-text h2 {
+          font-size: clamp(32px, 5vw, 48px);
+          font-weight: 700;
+          color: #3D1F7A;
+          margin: 8px 0 12px;
+          line-height: 1.05;
+        }
+
+        .slogan {
+          font-weight: 600;
+          color: #2EBD8E;
+          letter-spacing: 0.08em;
+          margin-bottom: 24px;
+        }
+
+        .directivos {
+          border-left: 3px solid #2EBD8E;
+          padding-left: 16px;
+          margin-bottom: 24px;
+        }
+
+        .directivo {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 4px 12px;
+          padding: 4px 0;
+        }
+
+        .directivo-nombre {
+          font-weight: 700;
+          color: #3D1F7A;
+          font-size: 15px;
+        }
+
+        .directivo-apodo {
+          font-weight: 400;
+          color: #2EBD8E;
+          font-size: 13px;
+          font-style: italic;
+          background: rgba(46, 189, 142, 0.12);
+          padding: 0 8px;
+          border-radius: 4px;
+        }
+
+        .directivo-cargo {
+          color: #5B2D9E;
+          font-size: 13px;
+          font-weight: 500;
+        }
+
+        .presentation-message {
+          font-size: 15px;
+          color: #444;
+          margin-bottom: 20px;
+          line-height: 1.7;
+        }
+
+        .presentation-badge {
+          display: inline-block;
+          background: rgba(46, 189, 142, 0.15);
+          border: 1px solid #2EBD8E;
+          border-radius: 999px;
+          padding: 8px 20px;
+          color: #3D1F7A;
+          font-weight: 700;
+          font-size: 14px;
+        }
+
+        .presentation-image {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .image-container {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          border-radius: 16px;
+          overflow: hidden;
           position: relative;
-          color: var(--on-navy);
-          padding: 80px 0;
-          background: radial-gradient(120% 90% at 85% -10%, rgba(159, 211, 242, 0.1), transparent 60%),
-                      linear-gradient(165deg, var(--navy) 0%, #0c243f 70%, #081a30 100%);
+          border: 2px solid rgba(46, 189, 142, 0.3);
+          background: #f5f5f5;
+        }
+
+        .foto-movimiento {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .image-overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(transparent, rgba(61, 31, 122, 0.8));
+          padding: 20px 16px 14px;
+          color: white;
+          text-align: center;
+        }
+
+        .image-overlay p {
+          font-weight: 700;
+          font-size: 16px;
+          margin: 0;
+        }
+
+        .image-overlay small {
+          font-size: 12px;
+          opacity: 0.8;
+        }
+
+        .propuestas-principales,
+        .propuestas-areas {
+          margin-top: 56px;
+        }
+
+        .propuestas-principales h3,
+        .propuestas-areas h3 {
+          font-size: 28px;
+          font-weight: 700;
+          color: #3D1F7A;
+          margin-bottom: 24px;
+        }
+
+        .propuestas-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 24px;
+        }
+
+        .propuesta-card {
+          background: #f8f8f8;
+          padding: 24px;
+          border-radius: 12px;
+          border-left: 4px solid #2EBD8E;
+          transition: transform 0.2s;
+        }
+
+        .propuesta-card:hover {
+          transform: translateY(-4px);
+        }
+
+        .propuesta-numero {
+          font-weight: 700;
+          font-size: 28px;
+          color: #2EBD8E;
+          display: block;
+          margin-bottom: 8px;
+        }
+
+        .propuesta-card h4 {
+          font-weight: 700;
+          font-size: 18px;
+          color: #3D1F7A;
+          margin-bottom: 8px;
+        }
+
+        .propuesta-card p {
+          font-size: 14px;
+          color: #555;
+          line-height: 1.6;
+        }
+
+        .areas-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 24px;
+        }
+
+        .area-card {
+          background: #f8f8f8;
+          padding: 24px;
+          border-radius: 12px;
+          border: 1px solid #eee;
+        }
+
+        .area-card h4 {
+          font-weight: 700;
+          color: #5B2D9E;
+          margin-bottom: 12px;
+          font-size: 18px;
+        }
+
+        .area-card ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .area-card li {
+          position: relative;
+          padding-left: 20px;
+          margin-bottom: 8px;
+          font-size: 14px;
+          color: #444;
+          line-height: 1.5;
+        }
+
+        .area-card li::before {
+          content: '•';
+          position: absolute;
+          left: 0;
+          color: #2EBD8E;
+          font-weight: 700;
+        }
+
+        .presentation-footer {
+          margin-top: 64px;
+          padding-top: 32px;
+          border-top: 1px solid #eee;
+          text-align: center;
+        }
+
+        .presentation-footer p {
+          color: #666;
+          font-size: 15px;
+          margin-bottom: 16px;
+        }
+
+        .footer-cta {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          font-weight: 600;
+        }
+
+        .vota-badge {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(46, 189, 142, 0.1);
+          border: 1px solid #2EBD8E;
+          border-radius: 999px;
+          padding: 4px 16px 4px 20px;
+        }
+
+        .numero-circulo {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: #2EBD8E;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 18px;
         }
 
         @media (max-width: 768px) {
-          .landing-presentation {
-            padding: 60px 0;
+          .presentation-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
+          }
+          .presentation-image {
+            order: -1;
+          }
+          .image-container {
+            max-width: 350px;
+            margin: 0 auto;
           }
         }
       `}</style>
     </section>
-  )
+  );
 }

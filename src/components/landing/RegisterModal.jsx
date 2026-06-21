@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import LogoBanner from '../registration/LogoBanner'
-import VoteCheckbox from '../registration/VoteCheckbox'
-import SuccessScreen from '../registration/SuccessScreen'
-import { CARRERAS_EXTRA, CARRERAS_GRUPOS } from '../../lib/content'
+import { useState, useEffect } from 'react';
+import LogoBanner from '../registration/LogoBanner';
+import VoteCheckbox from '../registration/VoteCheckbox';
+import SuccessScreen from '../registration/SuccessScreen';
+import { CARRERAS_OPCIONES } from '../../lib/content'; // solo esta importación
 import {
   obtenerMensajeError,
   registrarInscripcion,
   supabaseConfigurado,
   validarConfiguracionSupabase,
-} from '../../lib/supabase'
+} from '../../lib/supabase';
 import {
   ESTADO_INICIAL,
   PREFERENCIAS,
@@ -16,130 +16,123 @@ import {
   construirPayload,
   soloNumeros,
   validarFormulario,
-} from '../../lib/validation'
+} from '../../lib/validation';
 
 const inputClass =
-  'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-poppins text-sm text-white placeholder:text-white/30 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20 disabled:opacity-60'
+  'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 font-poppins text-sm text-white placeholder:text-white/30 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20 disabled:opacity-60';
 
 export default function RegisterModal({ isOpen, onClose }) {
-  const [values, setValues] = useState(ESTADO_INICIAL)
-  const [errores, setErrores] = useState({})
-  const [enviando, setEnviando] = useState(false)
-  const [errorGlobal, setErrorGlobal] = useState('')
-  const [success, setSuccess] = useState(false)
-  const [inscripcionId, setInscripcionId] = useState(null)
-  const [tipoIdentificacion, setTipoIdentificacion] = useState(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
-  const [voteSuccess, setVoteSuccess] = useState(false)
-  const [voteWarning, setVoteWarning] = useState(false)
+  const [values, setValues] = useState(ESTADO_INICIAL);
+  const [errores, setErrores] = useState({});
+  const [enviando, setEnviando] = useState(false);
+  const [errorGlobal, setErrorGlobal] = useState('');
+  const [success, setSuccess] = useState(false);
+  const [inscripcionId, setInscripcionId] = useState(null);
+  const [tipoIdentificacion, setTipoIdentificacion] = useState(TIPOS_IDENTIFICACION.CODIGO_MATRICULA);
+  const [voteSuccess, setVoteSuccess] = useState(false);
+  const [voteWarning, setVoteWarning] = useState(false);
 
-  const configError = validarConfiguracionSupabase()
+  const configError = validarConfiguracionSupabase();
 
-  // Cerrar modal con tecla ESC
   useEffect(() => {
     const handleEscape = (e) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose()
-      }
-    }
-    window.addEventListener('keydown', handleEscape)
-    return () => window.removeEventListener('keydown', handleEscape)
-  }, [isOpen, onClose])
+      if (e.key === 'Escape' && isOpen) onClose();
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
 
-  // Prevenir scroll cuando el modal está abierto
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset'
+      document.body.style.overflow = 'unset';
     }
     return () => {
-      document.body.style.overflow = 'unset'
-    }
-  }, [isOpen])
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const handleClose = () => {
-    setSuccess(false)
-    setValues(ESTADO_INICIAL)
-    setErrores({})
-    setErrorGlobal('')
-    setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
-    setVoteSuccess(false)
-    setVoteWarning(false)
-    onClose()
-  }
+    setSuccess(false);
+    setValues(ESTADO_INICIAL);
+    setErrores({});
+    setErrorGlobal('');
+    setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA);
+    setVoteSuccess(false);
+    setVoteWarning(false);
+    onClose();
+  };
 
   const handleChange = (field) => (event) => {
-    let { value } = event.target
-    if (field === 'telefono') value = soloNumeros(value, 9)
-    if (field === 'dni') value = soloNumeros(value, 8)
-    setValues((prev) => ({ ...prev, [field]: value }))
-    setErrores((prev) => ({ ...prev, [field]: undefined }))
-    setErrorGlobal('')
-  }
+    let { value } = event.target;
+    if (field === 'telefono') value = soloNumeros(value, 9);
+    if (field === 'dni') value = soloNumeros(value, 8);
+    setValues((prev) => ({ ...prev, [field]: value }));
+    setErrores((prev) => ({ ...prev, [field]: undefined }));
+    setErrorGlobal('');
+  };
 
   const handleVoteChange = (preferencia) => {
-    setValues((prev) => ({ ...prev, preferencia }))
-    setErrores((prev) => ({ ...prev, preferencia: undefined }))
-    setVoteSuccess(preferencia === PREFERENCIAS.TODOS_JUNTOS)
-    setVoteWarning(preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL)
-    setErrorGlobal('')
-  }
+    setValues((prev) => ({ ...prev, preferencia }));
+    setErrores((prev) => ({ ...prev, preferencia: undefined }));
+    setVoteSuccess(preferencia === PREFERENCIAS.TODOS_JUNTOS);
+    setVoteWarning(preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL);
+    setErrorGlobal('');
+  };
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const validationErrors = validarFormulario(values, tipoIdentificacion)
+    const validationErrors = validarFormulario(values, tipoIdentificacion);
     if (Object.keys(validationErrors).length > 0) {
-      setErrores(validationErrors)
-      return
+      setErrores(validationErrors);
+      return;
     }
 
-    const configErrorActual = validarConfiguracionSupabase()
+    const configErrorActual = validarConfiguracionSupabase();
     if (configErrorActual) {
-      setErrorGlobal(configErrorActual)
-      return
+      setErrorGlobal(configErrorActual);
+      return;
     }
 
-    setEnviando(true)
-    setErrorGlobal('')
+    setEnviando(true);
+    setErrorGlobal('');
 
-    const payload = construirPayload(values, tipoIdentificacion)
-    const { error, id } = await registrarInscripcion(payload)
+    const payload = construirPayload(values, tipoIdentificacion);
+    const { error, id } = await registrarInscripcion(payload);
 
-    setEnviando(false)
+    setEnviando(false);
 
     if (error) {
-      setErrorGlobal(obtenerMensajeError(error) ?? 'No pudimos completar tu inscripción.')
-      return
+      setErrorGlobal(obtenerMensajeError(error) ?? 'No pudimos completar tu inscripción.');
+      return;
     }
 
-    setInscripcionId(id)
-    setSuccess(true)
-  }
+    setInscripcionId(id);
+    setSuccess(true);
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <>
-      {/* Overlay */}
       <div
         className="fixed inset-0 z-[998] bg-black/50 backdrop-blur-sm transition-opacity"
         onClick={handleClose}
         style={{ animation: 'fadeIn 0.3s ease-out' }}
       />
 
-      {/* Modal */}
       <div
         className="fixed inset-0 z-[999] flex items-center justify-center p-4 overflow-y-auto"
         onClick={(e) => {
-          if (e.target === e.currentTarget) handleClose()
+          if (e.target === e.currentTarget) handleClose();
         }}
       >
         <div
           className="w-full max-w-md my-8 relative"
           style={{ animation: 'slideUp 0.3s ease-out' }}
         >
-          {/* Botón cerrar */}
           <button
             onClick={handleClose}
             className="absolute -top-12 right-0 text-white/70 hover:text-white transition-colors md:-top-10 md:-right-10"
@@ -149,7 +142,6 @@ export default function RegisterModal({ isOpen, onClose }) {
             </svg>
           </button>
 
-          {/* Contenido del modal */}
           {success ? (
             <div
               className="rounded-2xl p-6 overflow-hidden"
@@ -165,30 +157,27 @@ export default function RegisterModal({ isOpen, onClose }) {
             <div
               className="rounded-2xl p-6 overflow-hidden"
               style={{
-                background: 'rgba(255,255,255,0.05)',
+                background: 'rgba(61, 31, 122, 0.95)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 backdropFilter: 'blur(20px)',
               }}
             >
-              <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-yellow-400/40 bg-yellow-400/20">
-                  <svg
-                    className="h-5 w-5 text-yellow-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                    />
-                  </svg>
+              <div className="mb-6 flex items-start justify-between gap-3">
+                <div className="flex gap-3 flex-1">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg overflow-hidden">
+                    <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="h-12 w-12 object-cover" />
+                  </div>
+                  <div>
+                    <h2 className="font-bebas text-xl leading-tight text-white">Inscripción Estudiantil</h2>
+                    <p className="font-poppins text-xs text-white/50">El 2 de julio apoya al TODOS UNA</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-bebas text-2xl leading-none text-white">Inscripción Estudiantil</h2>
-                  <p className="font-poppins text-xs text-white/50">Completa tus datos para inscribirte</p>
+                <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white border-2 border-white">
+                  <span className="font-bebas text-lg text-purple-600">1</span>
+                  <svg viewBox="0 0 50 50" className="absolute inset-0 h-full w-full p-0.5">
+                    <line x1="8" y1="8" x2="42" y2="42" stroke="#7c3aed" strokeWidth="3" strokeLinecap="round" />
+                    <line x1="42" y1="8" x2="8" y2="42" stroke="#7c3aed" strokeWidth="3" strokeLinecap="round" />
+                  </svg>
                 </div>
               </div>
 
@@ -200,7 +189,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
               <form onSubmit={handleSubmit} noValidate className="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
                 <div>
-                  <p className="mb-3 font-bebas text-lg tracking-wide text-yellow-400">
+                  <p className="mb-3 font-bebas text-lg tracking-wide bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                     PREGUNTAS DE VOTACIÓN
                   </p>
                   <div className="space-y-3">
@@ -210,12 +199,12 @@ export default function RegisterModal({ isOpen, onClose }) {
                       description="Marca el cuadro con el número 1"
                       checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                       onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
-                      color="yellow"
+                      color="purple"
                     />
                     <VoteCheckbox
-                      number="7"
-                      label="Somos Estudiantil"
-                      description="Marca el cuadro con el número 7"
+                      number="9"
+                      label="🚫 NO al continuismo - ALTO a la corrupción"
+                      description="Marca el cuadro con el número 9"
                       checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
                       onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
                       color="cyan"
@@ -227,21 +216,21 @@ export default function RegisterModal({ isOpen, onClose }) {
                 </div>
 
                 {voteSuccess && (
-                  <div className="rounded-xl border-2 border-yellow-400/60 bg-yellow-400/10 p-4 text-center">
-                    <p className="font-bebas text-xl text-yellow-400">¡FELICIDADES POR TU BUENA ELECCIÓN!</p>
+                  <div className="rounded-xl border-2 border-purple-500/60 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-4 text-center">
+                    <p className="font-bebas text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      ¡FELICIDADES POR TU BUENA ELECCIÓN!
+                    </p>
                     <p className="mt-1 font-poppins text-sm text-white/80">
-                      Gracias por apoyar a{' '}
-                      <span className="font-bold text-yellow-400">Todos Juntos por la UNA</span> 💛
+                      Este <span className="font-bold text-purple-400">2 de julio</span> somos todos juntos por la UNA 💜
                     </p>
                   </div>
                 )}
 
                 {voteWarning && (
                   <div className="rounded-xl border-2 border-red-500/60 bg-red-500/10 p-4 text-center">
-                    <p className="font-bebas text-xl text-red-400">¡NO POR LOS CORRUPTOS!</p>
+                    <p className="font-bebas text-xl text-red-400">🚫 ¡NO POR LOS CORRUPTOS!</p>
                     <p className="mt-1 font-poppins text-sm text-white/80">
-                      Marca el <span className="font-bold text-yellow-400">CASILLA 1</span> — Todo con la
-                      verdad 💛
+                      Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 💜
                     </p>
                   </div>
                 )}
@@ -262,7 +251,6 @@ export default function RegisterModal({ isOpen, onClose }) {
                     {errores.nombre && <p className="mt-1 text-sm text-red-400">{errores.nombre}</p>}
                   </div>
 
-                  {/* Toggle: DNI vs Código de Matrícula */}
                   <div>
                     <p className="mb-2 block font-poppins text-xs uppercase tracking-wider text-white/60">
                       Tipo de Identificación *
@@ -271,13 +259,13 @@ export default function RegisterModal({ isOpen, onClose }) {
                       <button
                         type="button"
                         onClick={() => {
-                          setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
-                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }))
+                          setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA);
+                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }));
                         }}
-                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition ${
+                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition font-semibold ${
                           tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA
-                            ? 'bg-yellow-400 text-slate-900 font-semibold'
-                            : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                            : 'border border-purple-400/30 bg-purple-500/5 text-white hover:bg-purple-500/10'
                         }`}
                       >
                         CÓDIGO MATRÍCULA
@@ -285,13 +273,13 @@ export default function RegisterModal({ isOpen, onClose }) {
                       <button
                         type="button"
                         onClick={() => {
-                          setTipoIdentificacion(TIPOS_IDENTIFICACION.DNI)
-                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }))
+                          setTipoIdentificacion(TIPOS_IDENTIFICACION.DNI);
+                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }));
                         }}
-                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition ${
+                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition font-semibold ${
                           tipoIdentificacion === TIPOS_IDENTIFICACION.DNI
-                            ? 'bg-yellow-400 text-slate-900 font-semibold'
-                            : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                            ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white'
+                            : 'border border-teal-400/30 bg-teal-500/5 text-white hover:bg-teal-500/10'
                         }`}
                       >
                         DNI
@@ -299,7 +287,6 @@ export default function RegisterModal({ isOpen, onClose }) {
                     </div>
                   </div>
 
-                  {/* Mostrar Código de Matrícula solo si está seleccionado */}
                   {tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA && (
                     <div>
                       <label htmlFor="codigoMatricula" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
@@ -317,7 +304,6 @@ export default function RegisterModal({ isOpen, onClose }) {
                     </div>
                   )}
 
-                  {/* Mostrar DNI solo si está seleccionado */}
                   {tipoIdentificacion === TIPOS_IDENTIFICACION.DNI && (
                     <div>
                       <label htmlFor="dni" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
@@ -355,6 +341,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                     {errores.telefono && <p className="mt-1 text-sm text-red-400">{errores.telefono}</p>}
                   </div>
 
+                  {/* Carrera con solo 3 opciones */}
                   <div>
                     <label htmlFor="carrera" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
                       Carrera / Escuela profesional *
@@ -366,21 +353,10 @@ export default function RegisterModal({ isOpen, onClose }) {
                       onChange={handleChange('carrera')}
                       disabled={enviando}
                     >
-                      <option value="" disabled>
-                        Selecciona tu escuela profesional…
-                      </option>
-                      {CARRERAS_GRUPOS.map((grupo) => (
-                        <optgroup key={grupo.label} label={grupo.label}>
-                          {grupo.options.map((carrera) => (
-                            <option key={carrera} value={carrera} className="text-slate-900">
-                              {carrera}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                      {CARRERAS_EXTRA.map((carrera) => (
-                        <option key={carrera} value={carrera} className="text-slate-900">
-                          {carrera}
+                      <option value="" disabled>Selecciona tu área…</option>
+                      {CARRERAS_OPCIONES.map((opcion) => (
+                        <option key={opcion} value={opcion} className="text-slate-900">
+                          {opcion}
                         </option>
                       ))}
                     </select>
@@ -395,10 +371,10 @@ export default function RegisterModal({ isOpen, onClose }) {
                 <button
                   type="submit"
                   disabled={enviando || !supabaseConfigurado()}
-                  className="font-bebas h-12 w-full rounded-xl text-xl tracking-wider text-slate-900 transition disabled:cursor-not-allowed disabled:opacity-50"
+                  className="font-bebas h-12 w-full rounded-xl text-xl tracking-wider text-white transition disabled:cursor-not-allowed disabled:opacity-50 font-bold"
                   style={{
-                    background: 'hsl(48 100% 50%)',
-                    boxShadow: '0 0 20px hsl(48 100% 50% / 0.3)',
+                    background: 'var(--accent-green)',
+                    boxShadow: '0 0 30px rgba(46, 189, 142, 0.5)',
                   }}
                 >
                   {enviando ? 'Enviando…' : 'INSCRIBIRME AHORA'}
@@ -415,25 +391,14 @@ export default function RegisterModal({ isOpen, onClose }) {
 
       <style>{`
         @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-
         @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </>
-  )
+  );
 }
