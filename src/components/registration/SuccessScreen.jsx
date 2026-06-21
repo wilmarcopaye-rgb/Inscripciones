@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { WHATSAPP_URL } from '../../lib/content'
 import { obtenerSupabase } from '../../lib/supabase'
 
@@ -7,6 +7,36 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
   const [enviandoComentario, setEnviandoComentario] = useState(false)
   const [errorComentario, setErrorComentario] = useState('')
   const [comentarioEnviado, setComentarioEnviado] = useState(false)
+  const [idTemp, setIdTemp] = useState(null)
+  const [nombreTemp, setNombreTemp] = useState(nombre)
+
+  // Obtener datos temporales de localStorage
+  useEffect(() => {
+    console.log('SuccessScreen mounted, buscando datos temporales...')
+    console.log('inscripcionId prop:', inscripcionId)
+    
+    const datosTemporales = localStorage.getItem('inscripcionTemporal')
+    console.log('localStorage.getItem result:', datosTemporales)
+    
+    if (datosTemporales) {
+      try {
+        const { nombre: n, inscripcionId: id } = JSON.parse(datosTemporales)
+        console.log('Datos parseados:', { n, id })
+        setNombreTemp(n)
+        setIdTemp(id)
+        console.log('Datos temporales cargados:', { n, id })
+      } catch (err) {
+        console.error('Error al parsear datos temporales:', err)
+      }
+    } else {
+      console.log('No hay datos en localStorage')
+      // Fallback: si no está en localStorage pero viene en props, usar props
+      if (inscripcionId) {
+        console.log('Usando inscripcionId de props:', inscripcionId)
+        setIdTemp(inscripcionId)
+      }
+    }
+  }, [inscripcionId])
 
   const handleGuardarComentario = async (e) => {
     e.preventDefault()
@@ -16,20 +46,29 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
       return
     }
 
+    if (!idTemp) {
+      setErrorComentario('Error: ID de inscripción no disponible. Recarga la página.')
+      console.error('idTemp es:', idTemp)
+      return
+    }
+
     setEnviandoComentario(true)
     setErrorComentario('')
 
     try {
       const supabase = obtenerSupabase()
-      const { error } = await supabase.from('comentarios').insert([
-        {
-          inscripcion_id: inscripcionId,
-          nombre_inscrito: nombre,
-          comentario: comentario.trim(),
-        },
-      ])
+      const payload = {
+        inscripcion_id: Number(idTemp),
+        nombre_inscrito: nombreTemp,
+        comentario: comentario.trim(),
+      }
+      
+      console.log('Enviando comentario:', payload)
+      
+      const { error } = await supabase.from('comentarios').insert([payload])
 
       if (error) {
+        console.error('Error al guardar comentario:', error)
         setErrorComentario('No pudimos guardar tu comentario. Intenta nuevamente.')
         return
       }
@@ -37,11 +76,15 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
       setComentarioEnviado(true)
       setComentario('')
 
+      // Limpiar datos temporales después de enviar
+      localStorage.removeItem('inscripcionTemporal')
+
       // Cerrar automáticamente después de 3 segundos
       setTimeout(() => {
         onClose()
       }, 3000)
     } catch (err) {
+      console.error('Error catch:', err)
       setErrorComentario('Error al guardar el comentario')
     } finally {
       setEnviandoComentario(false)
@@ -60,7 +103,7 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
 
         <h2 className="font-bebas text-3xl tracking-wide text-white">¡Inscripción exitosa!</h2>
         <p className="mt-4 font-poppins text-sm leading-relaxed text-white/80">
-          Gracias, <strong className="text-yellow-400">{nombre}</strong>. Tu registro ha sido guardado correctamente.
+          Gracias, <strong className="text-yellow-400">{nombreTemp}</strong>. Tu registro ha sido guardado correctamente.
         </p>
       </div>
 
@@ -70,6 +113,8 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
           <p className="mb-4 font-bebas text-sm tracking-wider text-yellow-400">TU COMENTARIO</p>
           <form onSubmit={handleGuardarComentario} className="space-y-3">
             <textarea
+              id="comentario"
+              name="comentario"
               value={comentario}
               onChange={(e) => {
                 setComentario(e.target.value)
@@ -126,7 +171,10 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
 
       {/* Botón cerrar */}
       <button
-        onClick={onClose}
+        onClick={() => {
+          localStorage.removeItem('inscripcionTemporal')
+          onClose()
+        }}
         className="w-full font-poppins text-sm text-white/50 hover:text-white/80 transition py-2"
       >
         ← Cerrar

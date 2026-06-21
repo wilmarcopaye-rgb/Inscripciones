@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function LandingFooter() {
   return (
     <footer className="landing-footer">
@@ -14,6 +16,14 @@ export default function LandingFooter() {
           Iniciativa estudiantil. Esta página es de carácter informativo y de registro de
           simpatizantes del movimiento.
         </p>
+        <div className="mt-4 pt-4 border-t border-white/15">
+          <Link
+            to="/admin"
+            className="text-xs text-white/40 hover:text-white/70 transition no-underline"
+          >
+            config
+          </Link>
+        </div>
       </div>
     </footer>
   )

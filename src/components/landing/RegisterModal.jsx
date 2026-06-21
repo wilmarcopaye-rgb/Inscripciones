@@ -12,6 +12,7 @@ import {
 import {
   ESTADO_INICIAL,
   PREFERENCIAS,
+  TIPOS_IDENTIFICACION,
   construirPayload,
   soloNumeros,
   validarFormulario,
@@ -27,6 +28,7 @@ export default function RegisterModal({ isOpen, onClose }) {
   const [errorGlobal, setErrorGlobal] = useState('')
   const [success, setSuccess] = useState(false)
   const [inscripcionId, setInscripcionId] = useState(null)
+  const [tipoIdentificacion, setTipoIdentificacion] = useState(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
   const [voteSuccess, setVoteSuccess] = useState(false)
   const [voteWarning, setVoteWarning] = useState(false)
 
@@ -60,6 +62,7 @@ export default function RegisterModal({ isOpen, onClose }) {
     setValues(ESTADO_INICIAL)
     setErrores({})
     setErrorGlobal('')
+    setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
     setVoteSuccess(false)
     setVoteWarning(false)
     onClose()
@@ -68,6 +71,7 @@ export default function RegisterModal({ isOpen, onClose }) {
   const handleChange = (field) => (event) => {
     let { value } = event.target
     if (field === 'telefono') value = soloNumeros(value, 9)
+    if (field === 'dni') value = soloNumeros(value, 8)
     setValues((prev) => ({ ...prev, [field]: value }))
     setErrores((prev) => ({ ...prev, [field]: undefined }))
     setErrorGlobal('')
@@ -84,7 +88,7 @@ export default function RegisterModal({ isOpen, onClose }) {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    const validationErrors = validarFormulario(values)
+    const validationErrors = validarFormulario(values, tipoIdentificacion)
     if (Object.keys(validationErrors).length > 0) {
       setErrores(validationErrors)
       return
@@ -99,7 +103,7 @@ export default function RegisterModal({ isOpen, onClose }) {
     setEnviando(true)
     setErrorGlobal('')
 
-    const payload = construirPayload(values)
+    const payload = construirPayload(values, tipoIdentificacion)
     const { error, id } = await registrarInscripcion(payload)
 
     setEnviando(false)
@@ -258,35 +262,81 @@ export default function RegisterModal({ isOpen, onClose }) {
                     {errores.nombre && <p className="mt-1 text-sm text-red-400">{errores.nombre}</p>}
                   </div>
 
+                  {/* Toggle: DNI vs Código de Matrícula */}
                   <div>
-                    <label htmlFor="dni" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                      DNI *
-                    </label>
-                    <input
-                      id="dni"
-                      className={inputClass}
-                      value={values.dni}
-                      onChange={handleChange('dni')}
-                      placeholder="Ej. 71XXXXXX"
-                      disabled={enviando}
-                    />
-                    {errores.dni && <p className="mt-1 text-sm text-red-400">{errores.dni}</p>}
+                    <p className="mb-2 block font-poppins text-xs uppercase tracking-wider text-white/60">
+                      Tipo de Identificación *
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
+                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }))
+                        }}
+                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition ${
+                          tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA
+                            ? 'bg-yellow-400 text-slate-900 font-semibold'
+                            : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                        }`}
+                      >
+                        CÓDIGO MATRÍCULA
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTipoIdentificacion(TIPOS_IDENTIFICACION.DNI)
+                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }))
+                        }}
+                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition ${
+                          tipoIdentificacion === TIPOS_IDENTIFICACION.DNI
+                            ? 'bg-yellow-400 text-slate-900 font-semibold'
+                            : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                        }`}
+                      >
+                        DNI
+                      </button>
+                    </div>
                   </div>
 
-                  <div>
-                    <label htmlFor="codigoMatricula" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                      Código de matrícula *
-                    </label>
-                    <input
-                      id="codigoMatricula"
-                      className={inputClass}
-                      value={values.codigoMatricula}
-                      onChange={handleChange('codigoMatricula')}
-                      placeholder="Ej. 20XXXX"
-                      disabled={enviando}
-                    />
-                    {errores.codigoMatricula && <p className="mt-1 text-sm text-red-400">{errores.codigoMatricula}</p>}
-                  </div>
+                  {/* Mostrar Código de Matrícula solo si está seleccionado */}
+                  {tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA && (
+                    <div>
+                      <label htmlFor="codigoMatricula" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
+                        Código de matrícula *
+                      </label>
+                      <input
+                        id="codigoMatricula"
+                        className={inputClass}
+                        value={values.codigoMatricula}
+                        onChange={handleChange('codigoMatricula')}
+                        placeholder="Ej. 20XXXX"
+                        disabled={enviando}
+                      />
+                      {errores.codigoMatricula && <p className="mt-1 text-sm text-red-400">{errores.codigoMatricula}</p>}
+                    </div>
+                  )}
+
+                  {/* Mostrar DNI solo si está seleccionado */}
+                  {tipoIdentificacion === TIPOS_IDENTIFICACION.DNI && (
+                    <div>
+                      <label htmlFor="dni" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
+                        DNI *
+                      </label>
+                      <input
+                        id="dni"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength="8"
+                        className={inputClass}
+                        value={values.dni}
+                        onChange={handleChange('dni')}
+                        placeholder="Ej. 71XXXXXX"
+                        disabled={enviando}
+                      />
+                      {errores.dni && <p className="mt-1 text-sm text-red-400">{errores.dni}</p>}
+                    </div>
+                  )}
 
                   <div>
                     <label htmlFor="telefono" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">

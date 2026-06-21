@@ -82,14 +82,19 @@ export async function registrarInscripcion(payload) {
 
   const { data, error } = await client
     .from('inscripciones')
-    .insert([payload], { returning: 'representation' })
+    .insert([payload])
+    .select('id')
+
+  console.log('supabase.insert response:', { data, error })
 
   if (error) {
+    console.error('Error en insert:', error)
     return { data, error, id: null }
   }
 
   // Extraer el id del primer registro insertado
   const id = data && data.length > 0 ? data[0].id : null
+  console.log('ID extraído de data:', id)
 
   return { data, error: null, id }
 }
@@ -141,4 +146,40 @@ export function obtenerMensajeError(error) {
 export function obtenerSupabase() {
   const { client } = obtenerCliente()
   return client
+}
+
+/**
+ * Valida credenciales del admin contra la base de datos.
+ */
+export async function validarAdminCredenciales(usuario, contrasena) {
+  const { client, configError } = obtenerCliente()
+
+  if (configError) {
+    return { valido: false, error: 'Error de configuración de Supabase' }
+  }
+
+  try {
+    const { data, error } = await client
+      .from('admin_credentials')
+      .select('*')
+      .eq('usuario', usuario)
+      .eq('activo', true)
+      .single()
+
+    if (error || !data) {
+      return { valido: false, error: 'Usuario o contraseña incorrectos' }
+    }
+
+    // Comparar contraseña (en producción usar bcrypt u otro hash seguro)
+    const contrasenaValida = data.contrasena_hash === contrasena
+
+    if (contrasenaValida) {
+      return { valido: true, usuario: data.usuario }
+    } else {
+      return { valido: false, error: 'Usuario o contraseña incorrectos' }
+    }
+  } catch (err) {
+    console.error('Error al validar credenciales:', err)
+    return { valido: false, error: 'Error al validar credenciales' }
+  }
 }
