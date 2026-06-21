@@ -7,15 +7,13 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
       text: 'text-purple-500',
       checkBg: 'bg-purple-500',
       checkBorder: 'border-purple-500',
-      glow: 'shadow-[0_0_20px_rgba(168,85,247,0.6)]', // morado brillante
     },
-    red: { // cambiamos de 'cyan' a 'red'
+    red: {
       border: 'border-red-500',
       bg: 'bg-red-500/80',
       text: 'text-red-500',
       checkBg: 'bg-red-500',
       checkBorder: 'border-red-500',
-      glow: 'shadow-[0_0_20px_rgba(239,68,68,0.6)]', // rojo brillante
     },
   };
 
@@ -23,11 +21,12 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
 
   return (
     <div className="flex items-center gap-4 cursor-pointer group" onClick={onChange}>
+      {/* Cuadrado con número y X superpuesta */}
       <div className="flex-shrink-0">
         <div
           className={`
             w-14 h-14 rounded-xl border-2 flex items-center justify-center transition-all relative
-            ${checked ? `${colors.bg} ${colors.border} ${colors.glow}` : `${colors.border} bg-transparent`}
+            ${checked ? `${colors.bg} ${colors.border}` : `${colors.border} bg-transparent`}
             ${!checked && colors.hover}
           `}
         >
@@ -42,11 +41,13 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
         </div>
       </div>
 
+      {/* Texto de la opción */}
       <div className="flex-1">
         <p className="font-poppins text-sm text-white font-medium">{label}</p>
         <p className="font-poppins text-xs text-white/50">{description}</p>
       </div>
 
+      {/* Check circular a la derecha */}
       <div className="flex-shrink-0">
         {checked ? (
           <div className={`w-6 h-6 rounded-full ${colors.checkBg} border-2 ${colors.checkBorder} flex items-center justify-center`}>

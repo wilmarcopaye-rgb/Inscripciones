@@ -202,28 +202,47 @@ export default function RegisterModal({ isOpen, onClose }) {
               )}
 
               <form onSubmit={handleSubmit} noValidate className="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
+
+
                 <div>
                   <p className="mb-3 font-bebas text-lg tracking-wide bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                     PREGUNTAS DE VOTACIÓN
                   </p>
 
-                  <div className="rounded-xl border border-white/20 bg-white/5 p-4 space-y-3">
+                  {/* Opción 1 - TODOS JUNTOS */}
+                  <div
+                    className={`rounded-xl border-2 p-4 mb-3 transition-all ${
+                      values.preferencia === PREFERENCIAS.TODOS_JUNTOS
+                        ? 'border-purple-500 bg-purple-500/10'
+                        : 'border-white/20 bg-white/5'
+                    }`}
+                  >
                     <VoteCheckbox
                       number="1"
-                      label="TODOS JUNTOS POR LA UNA"
+                      label="Vota por el TODOS JUNTOS POR LA UNA"
                       description="Marca el cuadro con el número 1"
                       checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                       onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
                       color="purple"
                     />
+                  </div>
+
+                  {/* Opción 9 - NO al continuismo (rojo) */}
+                  <div
+                    className={`rounded-xl border-2 p-4 transition-all ${
+                      values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL
+                        ? 'border-red-500 bg-red-500/10'
+                        : 'border-white/20 bg-white/5'
+                    }`}
+                  >
                     <VoteCheckbox
                       number="9"
                       label="🚫 NO al continuismo - ALTO a la corrupción"
                       description="Marca el cuadro con el número 9"
                       checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
                       onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
-                      color="red" // 👈 cambio a rojo
-                    />  
+                      color="red" // 👈 color rojo
+                    />
                   </div>
 
                   {/* Mensaje de error cuando se selecciona la opción 9 */}
