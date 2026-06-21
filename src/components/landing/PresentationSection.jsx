@@ -1,4 +1,6 @@
 // src/components/landing/PresentationSection.jsx
+import { useState } from 'react';
+
 export default function PresentationSection() {
   const propuestas_principales = [
     {
@@ -62,12 +64,23 @@ export default function PresentationSection() {
     },
   ];
 
-  // Directivos con apodos
   const directivos = [
     { nombre: 'Dr. Charles Mendoza', apodo: 'tío Charles', cargo: 'RECTOR' },
     { nombre: 'Dr. Efraín Yupanqui', apodo: 'fire', cargo: 'Vicerrector Académico' },
     { nombre: 'Dr. Bernardo Roque', apodo: 'maestro roshi', cargo: 'Vicerrector de Investigación' },
   ];
+
+  // 👇 Imágenes para el carrusel
+  const imagenesCarrusel = ['/4.png', '/charles4.png', '/efrain.png', '/3.png'];
+  const [imagenActual, setImagenActual] = useState(0);
+
+  const siguiente = () => {
+    setImagenActual((prev) => (prev + 1) % imagenesCarrusel.length);
+  };
+
+  const anterior = () => {
+    setImagenActual((prev) => (prev - 1 + imagenesCarrusel.length) % imagenesCarrusel.length);
+  };
 
   return (
     <section id="propuestas" className="presentation">
@@ -79,7 +92,6 @@ export default function PresentationSection() {
             <h2>TODOS JUNTOS POR LA UNA</h2>
             <p className="slogan">Transparencia • Innovación • Honestidad</p>
 
-            {/* Directivos con apodos */}
             <div className="directivos">
               {directivos.map((dir, idx) => (
                 <div key={idx} className="directivo">
@@ -102,17 +114,49 @@ export default function PresentationSection() {
             </div>
           </div>
 
-          {/* Columna derecha: imagen 3.png */}
+          {/* 👇 Carrusel de imágenes en lugar de la imagen estática */}
           <div className="presentation-image">
             <div className="image-container">
-              <img
-                src="/3.png"
-                alt="Movimiento estudiantil"
-                className="foto-movimiento"
-              />
-              <div className="image-overlay">
-                <p>Movimiento estudiantil</p>
-                <small>Todos juntos por la UNA</small>
+              <div className="carrusel-wrapper">
+                <img
+                  src={imagenesCarrusel[imagenActual]}
+                  alt="Movimiento estudiantil"
+                  className="foto-movimiento"
+                />
+                <div className="image-overlay">
+                  <p>Movimiento estudiantil</p>
+                  <small>Todos juntos por la UNA</small>
+                </div>
+
+                {/* Controles de navegación */}
+                <button
+                  onClick={anterior}
+                  className="carrusel-btn carrusel-btn-izq"
+                  aria-label="Imagen anterior"
+                >
+                  ‹
+                </button>
+                <button
+                  onClick={siguiente}
+                  className="carrusel-btn carrusel-btn-der"
+                  aria-label="Imagen siguiente"
+                >
+                  ›
+                </button>
+
+                {/* Indicadores (puntos) */}
+                <div className="carrusel-indicadores">
+                  {imagenesCarrusel.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setImagenActual(idx)}
+                      className={`carrusel-punto ${
+                        idx === imagenActual ? 'carrusel-punto-activo' : ''
+                      }`}
+                      aria-label={`Ir a imagen ${idx + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -271,6 +315,7 @@ export default function PresentationSection() {
           font-size: 14px;
         }
 
+        /* ===== CARRUSEL ===== */
         .presentation-image {
           display: flex;
           align-items: center;
@@ -285,12 +330,20 @@ export default function PresentationSection() {
           position: relative;
           border: 2px solid rgba(46, 189, 142, 0.3);
           background: #f5f5f5;
+          max-width: 500px;
+        }
+
+        .carrusel-wrapper {
+          position: relative;
+          width: 100%;
+          height: 100%;
         }
 
         .foto-movimiento {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          transition: opacity 0.3s ease;
         }
 
         .image-overlay {
@@ -302,6 +355,7 @@ export default function PresentationSection() {
           padding: 20px 16px 14px;
           color: white;
           text-align: center;
+          pointer-events: none;
         }
 
         .image-overlay p {
@@ -314,6 +368,72 @@ export default function PresentationSection() {
           font-size: 12px;
           opacity: 0.8;
         }
+
+        /* Botones de navegación */
+        .carrusel-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(61, 31, 122, 0.7);
+          color: white;
+          border: 2px solid #2EBD8E;
+          border-radius: 50%;
+          width: 40px;
+          height: 40px;
+          font-size: 24px;
+          cursor: pointer;
+          transition: background 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+          backdrop-filter: blur(4px);
+        }
+
+        .carrusel-btn:hover {
+          background: rgba(46, 189, 142, 0.8);
+        }
+
+        .carrusel-btn-izq {
+          left: 10px;
+        }
+
+        .carrusel-btn-der {
+          right: 10px;
+        }
+
+        /* Indicadores (puntos) */
+        .carrusel-indicadores {
+          position: absolute;
+          bottom: 70px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 8px;
+          z-index: 10;
+        }
+
+        .carrusel-punto {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          border: 2px solid rgba(255, 255, 255, 0.6);
+          background: transparent;
+          cursor: pointer;
+          transition: background 0.2s, border-color 0.2s;
+          padding: 0;
+        }
+
+        .carrusel-punto-activo {
+          background: #2EBD8E;
+          border-color: #2EBD8E;
+        }
+
+        .carrusel-punto:hover {
+          border-color: #2EBD8E;
+        }
+
+        /* ===== Fin carrusel ===== */
 
         .propuestas-principales,
         .propuestas-areas {
@@ -466,6 +586,18 @@ export default function PresentationSection() {
           .image-container {
             max-width: 350px;
             margin: 0 auto;
+          }
+          .carrusel-btn {
+            width: 34px;
+            height: 34px;
+            font-size: 20px;
+          }
+          .carrusel-indicadores {
+            bottom: 60px;
+          }
+          .carrusel-punto {
+            width: 8px;
+            height: 8px;
           }
         }
       `}</style>

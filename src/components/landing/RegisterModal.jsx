@@ -210,7 +210,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   <div className="rounded-xl border border-white/20 bg-white/5 p-4 space-y-3">
                     <VoteCheckbox
                       number="1"
-                      label="Vota por el TODOS JUNTOS POR LA UNA"
+                      label="TODOS JUNTOS POR LA UNA"
                       description="Marca el cuadro con el número 1"
                       checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                       onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
@@ -247,7 +247,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                       ¡FELICIDADES POR TU BUENA ELECCIÓN!
                     </p>
                     <p className="mt-1 font-poppins text-sm text-white/80">
-                      Este <span className="font-bold text-purple-400">2 de julio</span> somos todos juntos por la UNA 💜
+                      Este <span className="font-bold text-purple-400">2 de julio</span> somos todos juntos por la UNA 🐧
                     </p>
                   </div>
                 )}
@@ -256,7 +256,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   <div className="rounded-xl border-2 border-red-500/60 bg-red-500/10 p-4 text-center">
                     <p className="font-bebas text-xl text-red-400">🚫 ¡NO POR LOS CORRUPTOS!</p>
                     <p className="mt-1 font-poppins text-sm text-white/80">
-                      Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 💜
+                      Marca el <span className="font-bold text-purple-400">CASILLA 1</span> — 2 de julio, todos juntos por la UNA 
                     </p>
                   </div>
                 )}
