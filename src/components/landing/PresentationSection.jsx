@@ -65,13 +65,13 @@ export default function PresentationSection() {
   ];
 
   const directivos = [
-    { nombre: 'Dr. Charles Mendoza', apodo: 'tío Charles', cargo: 'RECTOR' },
-    { nombre: 'Dr. Efraín Yupanqui', apodo: 'fire', cargo: 'Vicerrector Académico' },
-    { nombre: 'Dr. Bernardo Roque', apodo: 'maestro roshi', cargo: 'Vicerrector de Investigación' },
+    { nombre: 'Dr. Charles Mendoza', apodo: 'Tío Charles', cargo: 'RECTOR' },
+    { nombre: 'Dr. Efraín Yupanqui', apodo: 'Fallo', cargo: 'Vicerrector Académico' },
+    { nombre: 'Dr. Bernardo Roque', apodo: 'Maestro Roshi', cargo: 'Vicerrector de Investigación' },
   ];
 
   // 👇 Imágenes para el carrusel
-  const imagenesCarrusel = ['/4.png', '/charles4.png', '/efrain.png', '/3.png'];
+  const imagenesCarrusel = ['/4.png', '/3.png'];
   const [imagenActual, setImagenActual] = useState(0);
 
   const siguiente = () => {
@@ -197,9 +197,9 @@ export default function PresentationSection() {
         <div className="presentation-footer">
           <p>Por un smart campus y gestión universitaria cero papel.</p>
           <div className="footer-cta">
-            <span>Este 2 de Julio Vota por:</span>
+            <span>Este 2 de Julio apoya,</span>
             <div className="vota-badge">
-              <span>(Logo "TODOS JUNTOS POR LA UNA")</span>
+              <span>TODOS JUNTOS POR LA UNA</span>
               <div className="numero-circulo">1</div>
             </div>
           </div>

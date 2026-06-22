@@ -25,7 +25,7 @@ export default function SumateSection({ onOpenRegister }) {
         <div className="text-center">
           {/* 🔹 NUEVO TEXTO MÁS GRANDE Y VERDE AZULADO */}
           <p className="text-4xl md:text-5xl font-extrabold text-cyan-400 drop-shadow-lg mb-2">
-            Sobrino es crucial unirte al grupo de WhatsApp
+            Sobrin@ es crucial unirte al grupo de WhatsApp
           </p>
           <p className="text-white/70 text-sm mb-6">
             Únete a nuestro grupo de WhatsApp y completa tu registro. Así recibirás avisos y
@@ -54,7 +54,7 @@ export default function SumateSection({ onOpenRegister }) {
               1
             </div>
             <h3 className="mb-2 font-[var(--serif)] text-xl font-semibold text-white">
-              Sobrino es crucial unirte al grupo de WhatsApp
+              Sobrin@ es crucial unirte al grupo de WhatsApp
             </h3>
             <p className="mb-4 text-sm text-white/70">
               Ahí compartimos avisos, actividades y novedades del movimiento.
@@ -81,7 +81,7 @@ export default function SumateSection({ onOpenRegister }) {
                 </button>
               </div>
               {mensajeEnviado && (
-                <p className="text-xs text-green-400 mt-1">✅ Comentario enviado, sobrino</p>
+                <p className="text-xs text-green-400 mt-1">Sobrino, para que tu mensaje nos llegue, debes de Inscribirte</p>
               )}
             </div>
 

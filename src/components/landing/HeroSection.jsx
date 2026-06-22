@@ -1,11 +1,10 @@
-// src/components/landing/HeroSection.jsx
 import Carousel from './Carousel';
 
 export default function HeroSection({ onOpenRegister }) {
   return (
     <section className="hero">
       <div className="hero-shell">
-        {/* Imagen principal (título/logo) */}
+        {/* 🔹 Imagen principal (título/logo) - RESTAURADA ✨ */}
         <div className="hero-image-container">
           <img
             src="/VamosTodos.png"
@@ -14,7 +13,7 @@ export default function HeroSection({ onOpenRegister }) {
           />
         </div>
 
-        {/* Botones de acción */}
+        {/* 🔹 Botones de acción (SOLO UNA VEZ) */}
         <div className="hero-actions">
           <button onClick={onOpenRegister} className="btn-primary">
             Quiero inscribirme
@@ -24,8 +23,8 @@ export default function HeroSection({ onOpenRegister }) {
           </a>
         </div>
 
-        {/* Carrusel (tu cuadro que rota imágenes) */}
-        <Carousel />
+        {/* 🔹 Carrusel DESACTIVADO temporalmente */}
+        {/* <Carousel /> */}
       </div>
 
       <style>{`
@@ -111,13 +110,6 @@ export default function HeroSection({ onOpenRegister }) {
         .btn-secondary:hover {
           background: #2EBD8E;
           color: white;
-        }
-
-        /* Carrusel: ocupa todo el ancho, sin margen superior extra */
-        .hero-shell .relative.mt-10 {
-          margin-top: 0 !important;
-          width: 100%;
-          max-width: 800px;
         }
 
         @media (max-width: 640px) {

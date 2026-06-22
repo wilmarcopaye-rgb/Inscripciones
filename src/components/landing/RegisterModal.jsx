@@ -91,7 +91,7 @@ export default function RegisterModal({ isOpen, onClose }) {
     event.preventDefault();
 
     if (votoInvalido) {
-      setErrorGlobal('⚠️ No, sobrino ahí no es');
+      setErrorGlobal('⚠️ No, sobrin@ ahí no es');
       return;
     }
 
@@ -173,27 +173,39 @@ export default function RegisterModal({ isOpen, onClose }) {
                 backdropFilter: 'blur(20px)',
               }}
             >
-              {/* 🔹 ENCABEZADO - NUEVO TEXTO */}
+              {/* 🔹 ENCABEZADO - Logo VamosTodos.png ✨ */}
               <div className="mb-6 flex items-start justify-between gap-3">
-                <div className="flex gap-3 flex-1">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg overflow-hidden">
-                    <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="h-16 w-16 object-cover" />
+                <div className="flex gap-3 flex-1 items-center">
+                  {/* Logo más grande y centrado verticalmente */}
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg overflow-hidden border-2 border-green-400/30 bg-white/5">
+                    <img 
+                      src="/VamosTodos.png" 
+                      alt="Movimiento" 
+                      className="h-full w-full object-contain p-1" 
+                    />
                   </div>
                   <div>
                     <h2 className="font-bebas text-2xl leading-tight text-white">
                       YA DECIDI MI VOTO,
                     </h2>
                     <p className="font-poppins text-sm text-green-400 font-semibold">
-                      Este 2 de julio juntos construimos  el futuro de nuestra universidad.
+                      Este 2 de julio construimos un futuro de nuestra universidad.
                     </p>
                   </div>
                 </div>
-                <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white border-2 border-white">
-                  <span className="font-bebas text-lg text-purple-600">1</span>
-                  <svg viewBox="0 0 50 50" className="absolute inset-0 h-full w-full p-0.5">
-                    <line x1="8" y1="8" x2="42" y2="42" stroke="#7c3aed" strokeWidth="3" strokeLinecap="round" />
-                    <line x1="42" y1="8" x2="8" y2="42" stroke="#7c3aed" strokeWidth="3" strokeLinecap="round" />
-                  </svg>
+
+                {/* Recuadro con número 1 + "marca así" debajo ✨ */}
+                <div className="flex flex-col items-center flex-shrink-0">
+                  <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-white border-2 border-white">
+                    <span className="font-bebas text-lg text-purple-600">1</span>
+                    <svg viewBox="0 0 50 50" className="absolute inset-0 h-full w-full p-0.5">
+                      <line x1="8" y1="8" x2="42" y2="42" stroke="#7c3aed" strokeWidth="3" strokeLinecap="round" />
+                      <line x1="42" y1="8" x2="8" y2="42" stroke="#7c3aed" strokeWidth="3" strokeLinecap="round" />
+                    </svg>
+                  </div>
+                  <p className="text-[10px] font-semibold text-white/70 font-poppins mt-1 leading-none tracking-wide uppercase">
+                    marca así
+                  </p>
                 </div>
               </div>
 
@@ -202,7 +214,6 @@ export default function RegisterModal({ isOpen, onClose }) {
                   {configError}
                 </div>
               )}
-
               <form onSubmit={handleSubmit} noValidate className="space-y-5 max-h-[70vh] overflow-y-auto pr-2">
                 {/* 🔹 SECCIÓN DE VOTACIÓN */}
                 <div>
@@ -220,12 +231,13 @@ export default function RegisterModal({ isOpen, onClose }) {
                   >
                     <VoteCheckbox
                       number="1"
-                      label="TODOS JUNTOS POR LA UNA"
+                      label="Vota por el TODOS JUNTOS POR LA UNA"
                       description="Marca el cuadro con el número 1"
                       checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                       onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
                       color="purple"
                       emoji="😊"
+                      
                     />
                   </div>
 
@@ -239,12 +251,13 @@ export default function RegisterModal({ isOpen, onClose }) {
                   >
                     <VoteCheckbox
                       number="4"
-                      label="No sobrino no regreses con tu ex"
+                      label="No sobrin@ no regreses con tu ex"
                       description="Marca el cuadro con el número 4"
                       checked={values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL}
                       onChange={() => handleVoteChange(PREFERENCIAS.SOMOS_ESTUDIANTIL)}
                       color="red"
                       emoji="😞"
+                     
                     />
                   </div>
 
@@ -253,7 +266,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                     <div className="mt-3 rounded-xl border border-red-500/60 bg-red-500/10 p-3 text-center flex items-center justify-center gap-2">
                       <span className="text-2xl">⚠️</span>
                       <span className="font-poppins text-sm text-red-400 font-bold">
-                        No, sobrino ahí no es
+                        No, sobrin@ ahí no es
                       </span>
                     </div>
                   )}
@@ -261,8 +274,6 @@ export default function RegisterModal({ isOpen, onClose }) {
                   {errores.preferencia && (
                     <p className="mt-2 text-sm text-red-400">{errores.preferencia}</p>
                   )}
-
-                 
                 </div>
 
                 {/* 🔹 MENSAJES DE ESTADO */}
@@ -285,9 +296,10 @@ export default function RegisterModal({ isOpen, onClose }) {
                     </p>
                   </div>
                 )}
-                {/* 🔹 TEXTO DE AYUDA "Sobrino llena tus datos..." */}
-                <p className="mt-3 text-center font-poppins text-sm text-green-400 font-semibold">
-                  Sobrino llena tus datos y así ganarás grandes premios
+
+                {/* 🔹 TEXTO DE AYUDA "Sobrin@ llena tus datos..." – Más grande, mayúsculas ✨ */}
+                <p className="mt-3 text-center font-bebas text-3xl text-green-400 font-bold uppercase tracking-wide drop-shadow-lg">
+                  SOBRIN@ LLENA TUS DATOS Y ASÍ GANARÁS GRANDES PREMIOS
                 </p>
 
                 {/* 🔹 CAMPOS DEL FORMULARIO */}
@@ -399,7 +411,7 @@ export default function RegisterModal({ isOpen, onClose }) {
 
                   <div>
                     <label htmlFor="carrera" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                      De qué área eres sobrino *
+                      De qué área eres sobrin@ *
                     </label>
                     <select
                       id="carrera"
@@ -438,6 +450,15 @@ export default function RegisterModal({ isOpen, onClose }) {
                 <p className="text-center font-poppins text-xs text-white/40">
                   Tus datos se usarán únicamente para la organización interna del movimiento estudiantil.
                 </p>
+
+                {/* 🔹 Botón "salir" con flecha ✨ */}
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="w-full text-center text-white/60 hover:text-white transition font-poppins text-sm flex items-center justify-center gap-2 mt-2"
+                >
+                  <span>←</span> salir
+                </button>
               </form>
             </div>
           )}

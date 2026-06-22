@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 export default function LandingFooter() {
   return (
     <footer className="landing-footer">
-      {/* Onda SVG */}
       <div className="footer-wave">
         <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
           <path d="M0,0 C300,60 600,0 900,40 C1050,60 1150,30 1200,20 L1200,60 L0,60 Z" fill="#FFFFFF" />
@@ -22,14 +21,12 @@ export default function LandingFooter() {
           Iniciativa estudiantil. Esta página es de carácter informativo y de registro de
           simpatizantes del movimiento.
         </p>
-        <div className="mt-4 pt-4 border-t border-white/15">
-          <Link
-            to="/admin"
-            className="text-xs text-white/40 hover:text-white/70 transition no-underline"
-          >
+        {/* 🔹 "config" oculto ✨ */}
+        {/* <div className="mt-4 pt-4 border-t border-white/15">
+          <Link to="/admin" className="text-xs text-white/40 hover:text-white/70 transition no-underline">
             config
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* ========== ESTILOS NUEVOS ========== */}

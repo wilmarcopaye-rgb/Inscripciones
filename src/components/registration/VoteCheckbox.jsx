@@ -1,4 +1,4 @@
-export default function VoteCheckbox({ number, label, description, checked, onChange, color = 'purple', emoji = '😊' }) {
+export default function VoteCheckbox({ number, label, description, checked, onChange, color = 'purple', emoji = '😊', helpText = '' }) {
   const colorMap = {
     purple: {
       border: 'border-purple-500',
@@ -18,8 +18,9 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
 
   return (
     <div className="flex items-center gap-4 cursor-pointer group" onClick={onChange}>
-      {/* Cuadrado con fondo blanco siempre */}
-      <div className="flex-shrink-0">
+      {/* Contenedor del cuadrado + "marca así" debajo */}
+      <div className="flex flex-col items-center flex-shrink-0">
+        {/* Cuadrado con fondo blanco siempre */}
         <div
           className={`
             w-20 h-20 rounded-xl border-2 flex items-center justify-center transition-all relative
@@ -28,17 +29,25 @@ export default function VoteCheckbox({ number, label, description, checked, onCh
             bg-white
           `}
         >
-          {/* Número SIEMPRE en su color (morado o rojo) */}
-          <span className={`font-bold text-4xl ${colors.text}`}>
+          {/* Número SIEMPRE con su color (morado o rojo) */}
+          <span className={`text-4xl font-bold ${colors.text}`}>
             {number}
           </span>
+
           {/* X superpuesta (solo cuando está seleccionado) */}
           {checked && (
-            <span className={`absolute inset-0 flex items-center justify-center ${colors.xColor} text-6xl font-black leading-none opacity-60 pointer-events-none`}>
+            <span className={`absolute inset-0 flex items-center justify-center ${colors.xColor} text-6xl font-black leading-none opacity-50 pointer-events-none`}>
               ✕
             </span>
           )}
         </div>
+
+        {/* ✨ "marca así" DEBAJO del cuadrado */}
+        {helpText && (
+          <p className="text-center text-[10px] text-white/60 font-poppins mt-1 leading-none">
+            {helpText}
+          </p>
+        )}
       </div>
 
       {/* Texto de la opción */}

@@ -11,15 +11,17 @@ export default function Topbar({ onOpenRegister }) {
 
         {/* Elementos de la derecha (más grandes) */}
         <div className="topbar-right">
-          <a href="#propuestas" className="nav-link">Propuestas</a>
+          {/* ✨ Propuestas con borde verde */}
+          <a href="#propuestas" className="nav-link nav-link-bordered">
+            Propuestas
+          </a>
 
           <div className="yape-group">
             <img src="/yape.png" alt="Yape" className="yape-logo" />
-            <span className="yape-text">para recibir grandes premios</span>
+            <span className="yape-text">participa y gana</span> {/* ✨ texto cambiado */}
             <button onClick={onOpenRegister} className="btn-inscribete">
               Inscríbete
             </button>
-            {/* GIF recortado y más pequeño */}
             <img src="/yapeo.gif" alt="Regalo" className="gift-icon" />
           </div>
         </div>
@@ -35,7 +37,18 @@ export default function Topbar({ onOpenRegister }) {
           padding: 14px 0; /* más padding vertical */
           font-family: 'Montserrat', sans-serif;
         }
-
+        /* ✨ Nuevo estilo para Propuestas con borde verde */
+        .nav-link-bordered {
+          border: 2px solid #2EBD8E;
+          padding: 4px 14px;
+          border-radius: 999px;
+          color: white;
+          transition: background 0.2s;
+        }
+        .nav-link-bordered:hover {
+          background: #2EBD8E;
+          color: #1A1A1A;
+        }
         .topbar-shell {
           max-width: 1200px;
           margin: 0 auto;

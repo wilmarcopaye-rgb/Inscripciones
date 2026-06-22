@@ -1,6 +1,6 @@
 // src/lib/content.js
 
-export const WHATSAPP_URL = 'https://chat.whatsapp.com/EPqVQnwVS0F38r4rw2XHBd';
+export const WHATSAPP_URL = 'https://chat.whatsapp.com/BowIR1M4pclGfKnWwzhaQr';
 
 // Ahora solo 3 opciones para el select
 export const CARRERAS_OPCIONES = [

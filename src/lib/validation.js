@@ -1,4 +1,5 @@
 // src/lib/validation.js
+import { formatInTimeZone } from 'date-fns-tz';
 
 const MENSAJES = {
   requerido: 'Este campo es obligatorio.',
@@ -80,9 +81,11 @@ export function soloNumeros(value, maxLength) {
   return value.replace(/\D/g, '').slice(0, maxLength);
 }
 
-// 🟢 ÚNICA DEFINICIÓN DE construirPayload
 export function construirPayload(values, tipoIdentificacion = TIPOS_IDENTIFICACION.CODIGO_MATRICULA) {
   const esTodosJuntos = values.preferencia === PREFERENCIAS.TODOS_JUNTOS;
+
+  // 📅 Fecha actual en zona horaria de Perú (UTC-5)
+  const nowPeru = formatInTimeZone(new Date(), 'America/Lima', "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
 
   const payload = {
     nombre: values.nombre.trim(),
@@ -90,13 +93,14 @@ export function construirPayload(values, tipoIdentificacion = TIPOS_IDENTIFICACI
     carrera: values.carrera.trim(),
     voto_todos_juntos: esTodosJuntos,
     voto_estudiantil: !esTodosJuntos,
+    fecha_registro: nowPeru, // ✅ nombre correcto de la columna
   };
 
   if (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI) {
     payload.dni = values.dni.trim();
-    payload.codigo_matricula = null; // 👈 null en lugar de ''
+    payload.codigo_matricula = null;
   } else {
-    payload.dni = null; // 👈 null en lugar de ''
+    payload.dni = null;
     payload.codigo_matricula = values.codigoMatricula.trim();
   }
 
