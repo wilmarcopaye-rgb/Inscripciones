@@ -5,7 +5,7 @@ export default function Topbar({ onOpenRegister }) {
       <div className="topbar-shell">
         {/* Logo + nombre (más grande) */}
         <div className="topbar-brand">
-          <img src="/Dr.Charles1.jpg" alt="Dr. Charles" className="brand-logo" />
+          <img src="/Chl.gif" alt="Dr. Charles" className="brand-logo" />
           <span className="brand-text">El tío Charles más cerca de ti</span>
         </div>
 

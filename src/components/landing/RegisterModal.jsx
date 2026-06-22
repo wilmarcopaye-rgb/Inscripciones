@@ -231,7 +231,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   >
                     <VoteCheckbox
                       number="1"
-                      label="Vota por el TODOS JUNTOS POR LA UNA"
+                      label="TODOS JUNTOS POR LA UNA"
                       description="Marca el cuadro con el número 1"
                       checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                       onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
