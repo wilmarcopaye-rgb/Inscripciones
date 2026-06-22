@@ -184,7 +184,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                       YA DECIDI MI VOTO,
                     </h2>
                     <p className="font-poppins text-sm text-green-400 font-semibold">
-                      Este 2 de julio construimos un futuro de nuestra universidad.
+                      Este 2 de julio juntos construimos  el futuro de nuestra universidad.
                     </p>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                   >
                     <VoteCheckbox
                       number="1"
-                      label="Vota por el TODOS JUNTOS POR LA UNA"
+                      label="TODOS JUNTOS POR LA UNA"
                       description="Marca el cuadro con el número 1"
                       checked={values.preferencia === PREFERENCIAS.TODOS_JUNTOS}
                       onChange={() => handleVoteChange(PREFERENCIAS.TODOS_JUNTOS)}
@@ -229,7 +229,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                     />
                   </div>
 
-                  {/* Opción 4 - NO al continuismo (antes 9) */}
+                  {/* Opción 4 - NO al continuismo */}
                   <div
                     className={`rounded-xl border-2 p-4 transition-all ${
                       values.preferencia === PREFERENCIAS.SOMOS_ESTUDIANTIL
