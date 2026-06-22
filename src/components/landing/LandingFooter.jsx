@@ -19,17 +19,18 @@ export default function LandingFooter() {
           Universidad Nacional del Altiplano de Puno · Puno, Perú.
           <br />
           Iniciativa estudiantil. Esta página es de carácter informativo y de registro de
-          simpatizantes del movimiento.
-        </p>
-        {/* 🔹 "config" oculto ✨ */}
-        {/* <div className="mt-4 pt-4 border-t border-white/15">
-          <Link to="/admin" className="text-xs text-white/40 hover:text-white/70 transition no-underline">
-            config
+          simpatizantes del movimiento
+          {/* 🔹 PUNTO FINAL - OCULTO PERO CLICKEABLE PARA ADMIN ✨ */}
+          <Link
+            to="/admin"
+            className="text-[var(--on-navy-2)] hover:text-white/70 transition no-underline"
+            aria-label="Acceso administrador (oculto)"
+          >
+            .
           </Link>
-        </div> */}
+        </p>
       </div>
 
-      {/* ========== ESTILOS NUEVOS ========== */}
       <style>{`
         .landing-footer {
           background-color: var(--accent-green) !important;
