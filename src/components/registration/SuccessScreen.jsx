@@ -87,7 +87,7 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
       <div className="rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-4 space-y-4 shadow-lg shadow-yellow-500/5">
         <div className="space-y-1.5">
           <h3 className="font-bebas text-2xl leading-none text-yellow-400 tracking-wider uppercase">
-            📢 ¡Tu tío Charles te necesita!
+            📢 ¡El tío Charles mas cerca de ti!
           </h3>
           <p className="font-poppins text-xs text-white/90">
             Únete al grupo de WhatsApp oficial para participar en el sorteo de grandes premios 🎁
