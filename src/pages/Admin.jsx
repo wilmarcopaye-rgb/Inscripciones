@@ -13,6 +13,7 @@ export default function Admin() {
   const [fechaFin, setFechaFin] = useState('')
   const [exportando, setExportando] = useState(false)
   const [mensaje, setMensaje] = useState('')
+  const [credenciales, setCredenciales] = useState(null)
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -24,6 +25,7 @@ export default function Admin() {
 
       if (resultado.valido) {
         setAutenticado(true)
+        setCredenciales({ usuario, contrasena })
         setUsuario('')
         setContrasena('')
       } else {
@@ -45,7 +47,13 @@ export default function Admin() {
 
     try {
       const supabase = obtenerSupabase()
-      const resultado = await exportarInscripciones(supabase, fechaInicio, fechaFin)
+      const resultado = await exportarInscripciones(
+        supabase,
+        credenciales.usuario,
+        credenciales.contrasena,
+        fechaInicio,
+        fechaFin
+      )
       setMensaje(resultado.message)
     } catch (err) {
       setMensaje('Error al exportar inscripciones')
@@ -62,7 +70,11 @@ export default function Admin() {
 
     try {
       const supabase = obtenerSupabase()
-      const resultado = await exportarComentarios(supabase)
+      const resultado = await exportarComentarios(
+        supabase,
+        credenciales.usuario,
+        credenciales.contrasena
+      )
       setMensaje(resultado.message)
     } catch (err) {
       setMensaje('Error al exportar comentarios')
@@ -146,6 +158,10 @@ export default function Admin() {
           <h1 className="font-bebas text-4xl text-white tracking-wide">PANEL ADMIN</h1>
           <Link
             to="/"
+            onClick={() => {
+              setAutenticado(false)
+              setCredenciales(null)
+            }}
             className="text-white/50 hover:text-white/80 transition font-poppins text-sm"
           >
             ← Salir

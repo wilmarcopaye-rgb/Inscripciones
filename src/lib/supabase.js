@@ -159,22 +159,19 @@ export async function validarAdminCredenciales(usuario, contrasena) {
   }
 
   try {
-    const { data, error } = await client
-      .from('admin_credentials')
-      .select('*')
-      .eq('usuario', usuario)
-      .eq('activo', true)
-      .single()
+    const { data: valido, error } = await client
+      .rpc('verificar_admin', {
+        p_usuario: usuario,
+        p_contrasena: contrasena,
+      })
 
-    if (error || !data) {
+    if (error) {
+      console.error('Error rpc verificar_admin:', error)
       return { valido: false, error: 'Usuario o contraseña incorrectos' }
     }
 
-    // Comparar contraseña (en producción usar bcrypt u otro hash seguro)
-    const contrasenaValida = data.contrasena_hash === contrasena
-
-    if (contrasenaValida) {
-      return { valido: true, usuario: data.usuario }
+    if (valido) {
+      return { valido: true, usuario }
     } else {
       return { valido: false, error: 'Usuario o contraseña incorrectos' }
     }

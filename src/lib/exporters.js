@@ -8,22 +8,14 @@ import * as XLSX from 'xlsx'
 /**
  * Exporta inscripciones a Excel (filtrado por fecha)
  */
-export async function exportarInscripciones(supabase, fechaInicio, fechaFin) {
+export async function exportarInscripciones(supabase, usuario, contrasena, fechaInicio, fechaFin) {
   try {
-    let query = supabase.from('inscripciones').select('*')
-
-    // Aplicar filtros de fecha si se proporcionan
-    if (fechaInicio) {
-      query = query.gte('fecha_registro', fechaInicio)
-    }
-    if (fechaFin) {
-      // Agregar 1 día para incluir todo el día final
-      const fechaFinAdjustada = new Date(fechaFin)
-      fechaFinAdjustada.setDate(fechaFinAdjustada.getDate() + 1)
-      query = query.lt('fecha_registro', fechaFinAdjustada.toISOString())
-    }
-
-    const { data, error } = await query.order('fecha_registro', { ascending: false })
+    const { data, error } = await supabase.rpc('obtener_inscripciones_admin', {
+      p_usuario: usuario,
+      p_contrasena: contrasena,
+      p_fecha_inicio: fechaInicio || null,
+      p_fecha_fin: fechaFin || null,
+    })
 
     if (error) {
       throw error
@@ -77,12 +69,12 @@ export async function exportarInscripciones(supabase, fechaInicio, fechaFin) {
 /**
  * Exporta comentarios a Excel
  */
-export async function exportarComentarios(supabase) {
+export async function exportarComentarios(supabase, usuario, contrasena) {
   try {
-    const { data, error } = await supabase
-      .from('comentarios')
-      .select('*')
-      .order('fecha_creacion', { ascending: false })
+    const { data, error } = await supabase.rpc('obtener_comentarios_admin', {
+      p_usuario: usuario,
+      p_contrasena: contrasena,
+    })
 
     if (error) {
       throw error

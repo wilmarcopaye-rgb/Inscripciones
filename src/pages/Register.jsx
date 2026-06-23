@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import LogoBanner from '../components/registration/LogoBanner'
 import VoteCheckbox from '../components/registration/VoteCheckbox'
 import SuccessScreen from '../components/registration/SuccessScreen'
-import { CARRERAS_EXTRA, CARRERAS_GRUPOS } from '../lib/content'
 import {
   obtenerMensajeError,
   registrarInscripcion,
   supabaseConfigurado,
   validarConfiguracionSupabase,
+  obtenerSupabase,
 } from '../lib/supabase'
 import {
   ESTADO_INICIAL,
@@ -32,8 +32,56 @@ export default function Register() {
   const [tipoIdentificacion, setTipoIdentificacion] = useState(TIPOS_IDENTIFICACION.CODIGO_MATRICULA)
   const [voteSuccess, setVoteSuccess] = useState(false)
   const [voteWarning, setVoteWarning] = useState(false)
+  const [estudiante, setEstudiante] = useState(null)
+  const [buscandoEstudiante, setBuscandoEstudiante] = useState(false)
 
   const configError = validarConfiguracionSupabase()
+
+  // Buscar estudiante automáticamente al cambiar DNI o Código
+  useEffect(() => {
+    const buscarEstudiante = async () => {
+      const queryVal = tipoIdentificacion === TIPOS_IDENTIFICACION.DNI ? values.dni : values.codigoMatricula;
+      if (!queryVal) {
+        setEstudiante(null);
+        return;
+      }
+      
+      if (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI && queryVal.length !== 8) {
+        setEstudiante(null);
+        return;
+      }
+      if (tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA && queryVal.length < 5) {
+        setEstudiante(null);
+        return;
+      }
+
+      setBuscandoEstudiante(true);
+      try {
+        const supabase = obtenerSupabase();
+        const campo = tipoIdentificacion === TIPOS_IDENTIFICACION.DNI ? 'nro_dni' : 'nro_matricula';
+        const { data, error } = await supabase
+          .from('estudiantes')
+          .select('*')
+          .eq(campo, queryVal.trim())
+          .maybeSingle();
+
+        if (error) {
+          console.error('Error al buscar estudiante:', error);
+          setEstudiante(null);
+        } else {
+          setEstudiante(data || null);
+        }
+      } catch (err) {
+        console.error('Catch al buscar estudiante:', err);
+        setEstudiante(null);
+      } finally {
+        setBuscandoEstudiante(false);
+      }
+    };
+
+    const timer = setTimeout(buscarEstudiante, 500);
+    return () => clearTimeout(timer);
+  }, [values.dni, values.codigoMatricula, tipoIdentificacion]);
 
   const handleChange = (field) => (event) => {
     let { value } = event.target
@@ -55,6 +103,11 @@ export default function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    if (!estudiante) {
+      setErrorGlobal('Por favor, ingresa un DNI o Código de matrícula válido para detectar tus datos.')
+      return
+    }
+
     const validationErrors = validarFormulario(values, tipoIdentificacion)
     if (Object.keys(validationErrors).length > 0) {
       setErrores(validationErrors)
@@ -70,7 +123,7 @@ export default function Register() {
     setEnviando(true)
     setErrorGlobal('')
 
-    const payload = construirPayload(values, tipoIdentificacion)
+    const payload = construirPayload(values, estudiante, tipoIdentificacion)
     console.log('Payload a enviar:', payload)
     const { error, id } = await registrarInscripcion(payload)
     
@@ -94,7 +147,7 @@ export default function Register() {
 
     // Guardar datos temporales en localStorage para el comentario
     const datosTemporales = {
-      nombre: values.nombre,
+      nombre: payload.nombre,
       inscripcionId: id,
       timestamp: Date.now(),
     }
@@ -105,7 +158,8 @@ export default function Register() {
   }
 
   if (success) {
-    return <SuccessScreen nombre={values.nombre} inscripcionId={inscripcionId} />
+    const nombreCompleto = estudiante ? `${estudiante.nombres} ${estudiante.apellido_paterno} ${estudiante.apellido_materno}`.trim() : '';
+    return <SuccessScreen nombre={nombreCompleto} inscripcionId={inscripcionId} />
   }
 
   return (
@@ -194,22 +248,7 @@ export default function Register() {
               </div>
             )}
 
-            <div className="space-y-3 border-t border-white/10 pt-4">
-              <div>
-                <label htmlFor="nombre" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                  Nombre completo *
-                </label>
-                <input
-                  id="nombre"
-                  className={inputClass}
-                  value={values.nombre}
-                  onChange={handleChange('nombre')}
-                  placeholder="Tu nombre completo"
-                  disabled={enviando}
-                />
-                {errores.nombre && <p className="mt-1 text-sm text-red-400">{errores.nombre}</p>}
-              </div>
-
+            <div className="space-y-4 border-t border-white/10 pt-4">
               {/* Toggle: DNI vs Código de Matrícula */}
               <div>
                 <p className="mb-2 block font-poppins text-xs uppercase tracking-wider text-white/60">
@@ -286,6 +325,33 @@ export default function Register() {
                 </div>
               )}
 
+              {/* Información del estudiante detectado */}
+              {buscandoEstudiante && (
+                <p className="font-poppins text-xs text-yellow-400 italic">Buscando estudiante en la base de datos...</p>
+              )}
+              {!buscandoEstudiante && estudiante && (
+                <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-4 space-y-1">
+                  <p className="font-poppins text-xs uppercase tracking-wider text-green-400 font-semibold">
+                    Estudiante detectado:
+                  </p>
+                  <p className="font-bebas text-lg text-white">
+                    {estudiante.nombres} {estudiante.apellido_paterno} {estudiante.apellido_materno}
+                  </p>
+                  <p className="font-poppins text-xs text-white/70">
+                    Área/Carrera: <span className="text-white font-medium">{estudiante.programa_academico}</span>
+                  </p>
+                </div>
+              )}
+              {!buscandoEstudiante && !estudiante && (
+                (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI ? values.dni.length === 8 : values.codigoMatricula.length >= 5)
+              ) && (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-3">
+                  <p className="font-poppins text-xs text-red-400">
+                    ⚠️ No se encontró ningún estudiante con esa identificación. Por favor verifica.
+                  </p>
+                </div>
+              )}
+
               <div>
                 <label htmlFor="telefono" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
                   Número de teléfono *
@@ -301,38 +367,6 @@ export default function Register() {
                   disabled={enviando}
                 />
                 {errores.telefono && <p className="mt-1 text-sm text-red-400">{errores.telefono}</p>}
-              </div>
-
-              <div>
-                <label htmlFor="carrera" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                  Carrera / Escuela profesional *
-                </label>
-                <select
-                  id="carrera"
-                  className={`${inputClass} cursor-pointer`}
-                  value={values.carrera}
-                  onChange={handleChange('carrera')}
-                  disabled={enviando}
-                >
-                  <option value="" disabled>
-                    Selecciona tu escuela profesional…
-                  </option>
-                  {CARRERAS_GRUPOS.map((grupo) => (
-                    <optgroup key={grupo.label} label={grupo.label}>
-                      {grupo.options.map((carrera) => (
-                        <option key={carrera} value={carrera} className="text-slate-900">
-                          {carrera}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                  {CARRERAS_EXTRA.map((carrera) => (
-                    <option key={carrera} value={carrera} className="text-slate-900">
-                      {carrera}
-                    </option>
-                  ))}
-                </select>
-                {errores.carrera && <p className="mt-1 text-sm text-red-400">{errores.carrera}</p>}
               </div>
             </div>
 

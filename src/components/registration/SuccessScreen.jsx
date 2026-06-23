@@ -42,7 +42,7 @@ export default function SuccessScreen({ nombre, inscripcionId, onClose }) {
     try {
       const supabase = obtenerSupabase();
       const payload = {
-        inscripcion_id: Number(idTemp),
+        inscripcion_id: idTemp,
         nombre_inscrito: nombreTemp,
         comentario: comentario.trim(),
       };

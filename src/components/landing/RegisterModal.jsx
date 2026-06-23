@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import VoteCheckbox from '../registration/VoteCheckbox';
 import SuccessScreen from '../registration/SuccessScreen';
-import { CARRERAS_OPCIONES } from '../../lib/content';
 import {
   obtenerMensajeError,
   registrarInscripcion,
   supabaseConfigurado,
   validarConfiguracionSupabase,
+  obtenerSupabase,
 } from '../../lib/supabase';
 import {
   ESTADO_INICIAL,
@@ -31,6 +31,8 @@ export default function RegisterModal({ isOpen, onClose }) {
   const [voteSuccess, setVoteSuccess] = useState(false);
   const [voteWarning, setVoteWarning] = useState(false);
   const [votoInvalido, setVotoInvalido] = useState(false);
+  const [estudiante, setEstudiante] = useState(null);
+  const [buscandoEstudiante, setBuscandoEstudiante] = useState(false);
 
   const configError = validarConfiguracionSupabase();
 
@@ -53,6 +55,52 @@ export default function RegisterModal({ isOpen, onClose }) {
     };
   }, [isOpen]);
 
+  // Buscar estudiante automáticamente al cambiar DNI o Código
+  useEffect(() => {
+    const buscarEstudiante = async () => {
+      const queryVal = tipoIdentificacion === TIPOS_IDENTIFICACION.DNI ? values.dni : values.codigoMatricula;
+      if (!queryVal) {
+        setEstudiante(null);
+        return;
+      }
+      
+      if (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI && queryVal.length !== 8) {
+        setEstudiante(null);
+        return;
+      }
+      if (tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA && queryVal.length < 5) {
+        setEstudiante(null);
+        return;
+      }
+
+      setBuscandoEstudiante(true);
+      try {
+        const supabase = obtenerSupabase();
+        const campo = tipoIdentificacion === TIPOS_IDENTIFICACION.DNI ? 'nro_dni' : 'nro_matricula';
+        const { data, error } = await supabase
+          .from('estudiantes')
+          .select('*')
+          .eq(campo, queryVal.trim())
+          .maybeSingle();
+
+        if (error) {
+          console.error('Error al buscar estudiante:', error);
+          setEstudiante(null);
+        } else {
+          setEstudiante(data || null);
+        }
+      } catch (err) {
+        console.error('Catch al buscar estudiante:', err);
+        setEstudiante(null);
+      } finally {
+        setBuscandoEstudiante(false);
+      }
+    };
+
+    const timer = setTimeout(buscarEstudiante, 500);
+    return () => clearTimeout(timer);
+  }, [values.dni, values.codigoMatricula, tipoIdentificacion]);
+
   const handleClose = () => {
     setSuccess(false);
     setValues(ESTADO_INICIAL);
@@ -62,6 +110,8 @@ export default function RegisterModal({ isOpen, onClose }) {
     setVoteSuccess(false);
     setVoteWarning(false);
     setVotoInvalido(false);
+    setEstudiante(null);
+    setBuscandoEstudiante(false);
     onClose();
   };
 
@@ -95,6 +145,11 @@ export default function RegisterModal({ isOpen, onClose }) {
       return;
     }
 
+    if (!estudiante) {
+      setErrorGlobal('Por favor, ingresa un DNI o Código de matrícula válido para detectar tus datos.');
+      return;
+    }
+
     const validationErrors = validarFormulario(values, tipoIdentificacion);
     if (Object.keys(validationErrors).length > 0) {
       setErrores(validationErrors);
@@ -110,7 +165,7 @@ export default function RegisterModal({ isOpen, onClose }) {
     setEnviando(true);
     setErrorGlobal('');
 
-    const payload = construirPayload(values, tipoIdentificacion);
+    const payload = construirPayload(values, estudiante, tipoIdentificacion);
     const { error, id } = await registrarInscripcion(payload);
 
     setEnviando(false);
@@ -303,22 +358,7 @@ export default function RegisterModal({ isOpen, onClose }) {
                 </p>
 
                 {/* 🔹 CAMPOS DEL FORMULARIO */}
-                <div className="space-y-3 border-t border-white/10 pt-4">
-                  <div>
-                    <label htmlFor="nombre" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                      Nombre completo *
-                    </label>
-                    <input
-                      id="nombre"
-                      className={inputClass}
-                      value={values.nombre}
-                      onChange={handleChange('nombre')}
-                      placeholder="Apellidos y nombres"
-                      disabled={enviando}
-                    />
-                    {errores.nombre && <p className="mt-1 text-sm text-red-400">{errores.nombre}</p>}
-                  </div>
-
+                <div className="space-y-4 border-t border-white/10 pt-4">
                   <div>
                     <p className="mb-2 block font-poppins text-xs uppercase tracking-wider text-white/60">
                       Tipo de Identificación *
@@ -392,6 +432,33 @@ export default function RegisterModal({ isOpen, onClose }) {
                     </div>
                   )}
 
+                  {/* Información del estudiante detectado */}
+                  {buscandoEstudiante && (
+                    <p className="font-poppins text-xs text-yellow-400 italic">Buscando estudiante en la base de datos...</p>
+                  )}
+                  {!buscandoEstudiante && estudiante && (
+                    <div className="rounded-xl border border-green-500/30 bg-green-500/5 p-4 space-y-1">
+                      <p className="font-poppins text-xs uppercase tracking-wider text-green-400 font-semibold">
+                        Estudiante detectado:
+                      </p>
+                      <p className="font-bebas text-lg text-white">
+                        {estudiante.nombres} {estudiante.apellido_paterno} {estudiante.apellido_materno}
+                      </p>
+                      <p className="font-poppins text-xs text-white/70">
+                        Área/Carrera: <span className="text-white font-medium">{estudiante.programa_academico}</span>
+                      </p>
+                    </div>
+                  )}
+                  {!buscandoEstudiante && !estudiante && (
+                    (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI ? values.dni.length === 8 : values.codigoMatricula.length >= 5)
+                  ) && (
+                    <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-3">
+                      <p className="font-poppins text-xs text-red-400">
+                        ⚠️ No se encontró ningún estudiante con esa identificación. Por favor verifica.
+                      </p>
+                    </div>
+                  )}
+
                   <div>
                     <label htmlFor="telefono" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
                       Número de teléfono *
@@ -407,27 +474,6 @@ export default function RegisterModal({ isOpen, onClose }) {
                       disabled={enviando}
                     />
                     {errores.telefono && <p className="mt-1 text-sm text-red-400">{errores.telefono}</p>}
-                  </div>
-
-                  <div>
-                    <label htmlFor="carrera" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                      De qué área eres sobrin@ *
-                    </label>
-                    <select
-                      id="carrera"
-                      className={`${inputClass} cursor-pointer`}
-                      value={values.carrera}
-                      onChange={handleChange('carrera')}
-                      disabled={enviando}
-                    >
-                      <option value="" disabled>Selecciona tu área…</option>
-                      {CARRERAS_OPCIONES.map((opcion) => (
-                        <option key={opcion} value={opcion} className="text-slate-900">
-                          {opcion}
-                        </option>
-                      ))}
-                    </select>
-                    {errores.carrera && <p className="mt-1 text-sm text-red-400">{errores.carrera}</p>}
                   </div>
                 </div>
 

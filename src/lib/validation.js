@@ -29,15 +29,6 @@ const DNI_REGEX = /^\d{8}$/;
 export function validarFormulario(values, tipoIdentificacion = TIPOS_IDENTIFICACION.CODIGO_MATRICULA) {
   const errores = {};
 
-  const nombre = values.nombre?.trim() ?? '';
-  if (!nombre) {
-    errores.nombre = MENSAJES.requerido;
-  } else if (nombre.length < 3) {
-    errores.nombre = MENSAJES.nombreCorto;
-  } else if (nombre.length > 100) {
-    errores.nombre = MENSAJES.nombreLargo;
-  }
-
   if (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI) {
     const dni = values.dni?.trim() ?? '';
     if (!dni) {
@@ -65,11 +56,6 @@ export function validarFormulario(values, tipoIdentificacion = TIPOS_IDENTIFICAC
     errores.telefono = MENSAJES.telefonoInvalido;
   }
 
-  const carrera = values.carrera?.trim() ?? '';
-  if (!carrera) {
-    errores.carrera = MENSAJES.carrera;
-  }
-
   if (!values.preferencia) {
     errores.preferencia = MENSAJES.preferencia;
   }
@@ -81,28 +67,24 @@ export function soloNumeros(value, maxLength) {
   return value.replace(/\D/g, '').slice(0, maxLength);
 }
 
-export function construirPayload(values, tipoIdentificacion = TIPOS_IDENTIFICACION.CODIGO_MATRICULA) {
+export function construirPayload(values, estudiante, tipoIdentificacion = TIPOS_IDENTIFICACION.CODIGO_MATRICULA) {
   const esTodosJuntos = values.preferencia === PREFERENCIAS.TODOS_JUNTOS;
 
   // 📅 Fecha actual en zona horaria de Perú (UTC-5)
   const nowPeru = formatInTimeZone(new Date(), 'America/Lima', "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
 
+  const nombreCompleto = `${estudiante.nombres} ${estudiante.apellido_paterno} ${estudiante.apellido_materno}`.trim();
+
   const payload = {
-    nombre: values.nombre.trim(),
+    nombre: nombreCompleto,
     telefono: values.telefono.trim(),
-    carrera: values.carrera.trim(),
+    carrera: estudiante.programa_academico,
     voto_todos_juntos: esTodosJuntos,
     voto_estudiantil: !esTodosJuntos,
-    fecha_registro: nowPeru, // ✅ nombre correcto de la columna
+    fecha_registro: nowPeru,
+    dni: estudiante.nro_dni || null,
+    codigo_matricula: estudiante.nro_matricula || null,
   };
-
-  if (tipoIdentificacion === TIPOS_IDENTIFICACION.DNI) {
-    payload.dni = values.dni.trim();
-    payload.codigo_matricula = null;
-  } else {
-    payload.dni = null;
-    payload.codigo_matricula = values.codigoMatricula.trim();
-  }
 
   return payload;
 }
