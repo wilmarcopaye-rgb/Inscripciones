@@ -175,6 +175,14 @@ export default function RegisterModal({ isOpen, onClose }) {
       return;
     }
 
+    // Guardar datos temporales en localStorage para el comentario
+    const datosTemporales = {
+      nombre: payload.nombre,
+      inscripcionId: id,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem('inscripcionTemporal', JSON.stringify(datosTemporales));
+
     setInscripcionId(id);
     setSuccess(true);
   };
@@ -217,7 +225,11 @@ export default function RegisterModal({ isOpen, onClose }) {
                 backdropFilter: 'blur(20px)',
               }}
             >
-              <SuccessScreen nombre={values.nombre} inscripcionId={inscripcionId} onClose={handleClose} />
+              <SuccessScreen
+                nombre={estudiante ? `${estudiante.nombres} ${estudiante.apellido_paterno} ${estudiante.apellido_materno}`.trim() : ''}
+                inscripcionId={inscripcionId}
+                onClose={handleClose}
+              />
             </div>
           ) : (
             <div
