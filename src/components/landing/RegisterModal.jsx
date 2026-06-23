@@ -232,19 +232,19 @@ export default function RegisterModal({ isOpen, onClose }) {
               <div className="mb-6 flex items-start justify-between gap-3">
                 <div className="flex gap-3 flex-1 items-center">
                   {/* Logo más grande y centrado verticalmente */}
-                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg overflow-hidden border-2 border-green-400/30 bg-white/5">
+                  <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg overflow-hidden border-0 border-green-400/30 bg-white/5">
                     <img 
                       src="/VamosTodos.png" 
                       alt="Movimiento" 
-                      className="h-full w-full object-contain p-1" 
+                      className="h-full w-full object-cover p-0" 
                     />
                   </div>
                   <div>
                     <h2 className="font-bebas text-2xl leading-tight text-white">
-                      YA DECIDI MI VOTO,
+                      YA DECIDI MI VOTO
                     </h2>
                     <p className="font-poppins text-sm text-green-400 font-semibold">
-                      Este 2 de julio construimos un futuro de nuestra universidad.
+                      Este 2 de julio juntos construimos el futuro de nuestra universidad.
                     </p>
                   </div>
                 </div>
