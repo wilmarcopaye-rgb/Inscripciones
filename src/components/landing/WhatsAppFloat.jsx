@@ -52,8 +52,8 @@ export default function WhatsAppFloat() {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 62px;
-          height: 62px;
+          width: 81px;
+          height: 81px;
           border-radius: 50%;
           background: #25D366;
           box-shadow: 0 6px 24px rgba(37, 211, 102, 0.45),
@@ -78,8 +78,8 @@ export default function WhatsAppFloat() {
 
         /* Ícono SVG */
         .wa-icon {
-          width: 38px;
-          height: 38px;
+          width: 49px;
+          height: 49px;
           position: relative;
           z-index: 2;
           filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
@@ -138,13 +138,13 @@ export default function WhatsAppFloat() {
           .wa-float {
             bottom: 18px;
             right: 18px;
-            width: 54px;
-            height: 54px;
+            width: 70px;
+            height: 70px;
           }
 
           .wa-icon {
-            width: 32px;
-            height: 32px;
+            width: 42px;
+            height: 42px;
           }
 
           .wa-tooltip {
