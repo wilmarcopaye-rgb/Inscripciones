@@ -4,12 +4,12 @@ export default function WalkingPenguin() {
   return (
     <>
       {/*
-        Filtro SVG para eliminar el croma verde.
-        Fórmula del canal alfa:
-          A_out = 2*R - 4*G + 2*B + 2
-          → verde puro (0,1,0) → A = -2  → 0  (transparente) ✓
-          → blanco     (1,1,1) → A =  2  → 1  (opaco)        ✓
-          → negro      (0,0,0) → A =  2  → 1  (opaco)        ✓
+        Filtro SVG de croma en 3 pasos:
+        1. feColorMatrix  → mide "qué tan verde" es cada píxel y lo pone en el canal alfa
+                            (verde puro → A≈1 | negro/blanco → A≈0)
+        2. feComponentTransfer → invierte ese alfa
+                            (verde → 0=transparente | resto → 1=opaco)
+        3. feComposite "in" → aplica esa máscara sobre la imagen original
       */}
       <svg
         width="0"
@@ -18,14 +18,26 @@ export default function WalkingPenguin() {
         aria-hidden="true"
       >
         <defs>
-          <filter id="penguin-chroma-key" x="0" y="0" width="100%" height="100%">
+          <filter id="penguin-chroma-key" x="0%" y="0%" width="100%" height="100%"
+                  colorInterpolationFilters="sRGB">
+
+            {/* Paso 1 – medir "verdosidad": A = -R + 2G - B  (verde=1, blanco/negro=0) */}
             <feColorMatrix
               type="matrix"
-              values="1 0 0 0 0
-                      0 1 0 0 0
-                      0 0 1 0 0
-                      2 -4 2 0 2"
+              values="0 0 0 0 1
+                      0 0 0 0 1
+                      0 0 0 0 1
+                     -1 2 -1 0 0"
+              result="greenMask"
             />
+
+            {/* Paso 2 – invertir: verde=0 (transparente), resto=1 (opaco) */}
+            <feComponentTransfer in="greenMask" result="alphaMask">
+              <feFuncA type="linear" slope="-1" intercept="1" />
+            </feComponentTransfer>
+
+            {/* Paso 3 – recortar la imagen original con la máscara */}
+            <feComposite in="SourceGraphic" in2="alphaMask" operator="in" />
           </filter>
         </defs>
       </svg>
@@ -52,13 +64,12 @@ export default function WalkingPenguin() {
           animation: penguin-patrol 22s linear infinite;
         }
 
+        /* Mismo tamaño que el botón flotante de WhatsApp (81 px) */
         .penguin-img {
           display: block;
-          height: 110px;
+          height: 81px;
           width: auto;
-          /* Aplica el filtro de croma verde */
           filter: url(#penguin-chroma-key);
-          /* Suaviza los bordes del recorte */
           image-rendering: auto;
         }
 
@@ -70,17 +81,17 @@ export default function WalkingPenguin() {
           100% → se voltea de nuevo y reinicia
         */
         @keyframes penguin-patrol {
-          0%   { transform: translateX(-130px) scaleX(1);  }
-          48%  { transform: translateX(calc(100vw + 30px)) scaleX(1);  }
-          50%  { transform: translateX(calc(100vw + 30px)) scaleX(-1); }
-          98%  { transform: translateX(-130px) scaleX(-1); }
-          100% { transform: translateX(-130px) scaleX(1);  }
+          0%   { transform: translateX(-100px) scaleX(1);  }
+          48%  { transform: translateX(calc(100vw + 20px)) scaleX(1);  }
+          50%  { transform: translateX(calc(100vw + 20px)) scaleX(-1); }
+          98%  { transform: translateX(-100px) scaleX(-1); }
+          100% { transform: translateX(-100px) scaleX(1);  }
         }
 
         /* ===== Responsive ===== */
         @media (max-width: 500px) {
           .penguin-img {
-            height: 80px;
+            height: 60px;
           }
         }
       `}</style>
