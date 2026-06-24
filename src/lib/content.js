@@ -6,7 +6,7 @@ export const WHATSAPP_URL = 'https://chat.whatsapp.com/LvuDiINJghL874cSFllLGT';
 export const CARRERAS_OPCIONES = [
   'Ingenierías',
   'Biomédicas',
-  'Sociales'
+  'Sociales'  
 ];
 
 // Eliminamos los arrays antiguos para que no se usen

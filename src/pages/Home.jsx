@@ -7,6 +7,8 @@ import PillarsSection from '../components/landing/PillarsSection';
 import SumateSection from '../components/landing/SumateSection';
 import RegisterModal from '../components/landing/RegisterModal';
 import LandingFooter from '../components/landing/LandingFooter';
+import WhatsAppFloat from '../components/landing/WhatsAppFloat';
+import SplashScreen from '../components/landing/SplashScreen';
 
 export default function Home() {
   // Cambia a true si quieres que el modal se abra al cargar la página
@@ -14,6 +16,7 @@ export default function Home() {
 
   return (
     <div className="landing-page min-h-screen">
+      <SplashScreen />
       <Topbar onOpenRegister={() => setShowRegisterModal(true)} />
       <main>
         <HeroSection onOpenRegister={() => setShowRegisterModal(true)} />
@@ -24,6 +27,7 @@ export default function Home() {
       </main>
       <LandingFooter />
       <RegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
+      <WhatsAppFloat />
     </div>
   );
 }
