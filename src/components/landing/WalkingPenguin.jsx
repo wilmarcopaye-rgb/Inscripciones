@@ -64,11 +64,12 @@ export default function WalkingPenguin() {
           animation: penguin-patrol 22s linear infinite;
         }
 
-        /* Mismo tamaño que el botón flotante de WhatsApp (81 px) */
+        /* Tamaño aumentado para igualar visualmente al botón de WhatsApp */
         .penguin-img {
           display: block;
-          height: 81px;
-          width: auto;
+          height: 200px;
+          width: 200px;
+          object-fit: contain;
           filter: url(#penguin-chroma-key);
           image-rendering: auto;
         }
@@ -91,7 +92,8 @@ export default function WalkingPenguin() {
         /* ===== Responsive ===== */
         @media (max-width: 500px) {
           .penguin-img {
-            height: 60px;
+            height: 140px;
+            width: 140px;
           }
         }
       `}</style>
