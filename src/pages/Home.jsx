@@ -9,6 +9,7 @@ import RegisterModal from '../components/landing/RegisterModal';
 import LandingFooter from '../components/landing/LandingFooter';
 import WhatsAppFloat from '../components/landing/WhatsAppFloat';
 import SplashScreen from '../components/landing/SplashScreen';
+import WalkingPenguin from '../components/landing/WalkingPenguin';
 
 export default function Home() {
   // Cambia a true si quieres que el modal se abra al cargar la página
@@ -28,6 +29,7 @@ export default function Home() {
       <LandingFooter />
       <RegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
       <WhatsAppFloat />
+      <WalkingPenguin />
     </div>
   );
 }
