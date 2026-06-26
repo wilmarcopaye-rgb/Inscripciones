@@ -372,77 +372,19 @@ export default function RegisterModal({ isOpen, onClose }) {
                 {/* 🔹 CAMPOS DEL FORMULARIO */}
                 <div className="space-y-4 border-t border-white/10 pt-4">
                   <div>
-                    <p className="mb-2 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                      Tipo de Identificación *
-                    </p>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setTipoIdentificacion(TIPOS_IDENTIFICACION.CODIGO_MATRICULA);
-                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }));
-                        }}
-                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition font-semibold ${
-                          tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA
-                            ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                            : 'border border-purple-400/30 bg-purple-500/5 text-white hover:bg-purple-500/10'
-                        }`}
-                      >
-                        CÓDIGO MATRÍCULA
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setTipoIdentificacion(TIPOS_IDENTIFICACION.DNI);
-                          setErrores((prev) => ({ ...prev, dni: undefined, codigoMatricula: undefined }));
-                        }}
-                        className={`flex-1 py-2 px-4 rounded-xl font-poppins text-sm transition font-semibold ${
-                          tipoIdentificacion === TIPOS_IDENTIFICACION.DNI
-                            ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white'
-                            : 'border border-teal-400/30 bg-teal-500/5 text-white hover:bg-teal-500/10'
-                        }`}
-                      >
-                        DNI
-                      </button>
-                    </div>
+                    <label htmlFor="codigoMatricula" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
+                      Código de matrícula *
+                    </label>
+                    <input
+                      id="codigoMatricula"
+                      className={inputClass}
+                      value={values.codigoMatricula}
+                      onChange={handleChange('codigoMatricula')}
+                      placeholder="Ej. 20XXXX"
+                      disabled={enviando}
+                    />
+                    {errores.codigoMatricula && <p className="mt-1 text-sm text-red-400">{errores.codigoMatricula}</p>}
                   </div>
-
-                  {tipoIdentificacion === TIPOS_IDENTIFICACION.CODIGO_MATRICULA && (
-                    <div>
-                      <label htmlFor="codigoMatricula" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                        Código de matrícula *
-                      </label>
-                      <input
-                        id="codigoMatricula"
-                        className={inputClass}
-                        value={values.codigoMatricula}
-                        onChange={handleChange('codigoMatricula')}
-                        placeholder="Ej. 20XXXX"
-                        disabled={enviando}
-                      />
-                      {errores.codigoMatricula && <p className="mt-1 text-sm text-red-400">{errores.codigoMatricula}</p>}
-                    </div>
-                  )}
-
-                  {tipoIdentificacion === TIPOS_IDENTIFICACION.DNI && (
-                    <div>
-                      <label htmlFor="dni" className="mb-1 block font-poppins text-xs uppercase tracking-wider text-white/60">
-                        DNI *
-                      </label>
-                      <input
-                        id="dni"
-                        type="text"
-                        inputMode="numeric"
-                        maxLength="8"
-                        className={inputClass}
-                        value={values.dni}
-                        onChange={handleChange('dni')}
-                        placeholder="Ej. 71XXXXXX"
-                        disabled={enviando}
-                      />
-                      {errores.dni && <p className="mt-1 text-sm text-red-400">{errores.dni}</p>}
-                    </div>
-                  )}
 
                   {/* Información del estudiante detectado */}
                   {buscandoEstudiante && (
