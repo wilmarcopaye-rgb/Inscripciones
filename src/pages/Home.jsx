@@ -10,16 +10,19 @@ import LandingFooter from '../components/landing/LandingFooter';
 import WhatsAppFloat from '../components/landing/WhatsAppFloat';
 import SplashScreen from '../components/landing/SplashScreen';
 import WalkingPenguin from '../components/landing/WalkingPenguin';
+import VotacionFloat from '../components/landing/VotacionFloat';
 
 export default function Home() {
-  // Cambia a true si quieres que el modal se abra al cargar la página
-  const [showRegisterModal, setShowRegisterModal] = useState(true); // 👈 TRUE para que aparezca al inicio
+  const [showVotacionModal, setShowVotacionModal] = useState(true); // 👈 Abre consulta de votación al inicio
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   return (
     <div className="landing-page min-h-screen">
       <SplashScreen />
-      <Topbar onOpenRegister={() => setShowRegisterModal(true)} />
+      {/* El botón del Topbar abre la consulta de votación */}
+      <Topbar onOpenRegister={() => setShowVotacionModal(true)} />
       <main>
+        {/* Los botones debajo del Topbar (Hero y Súmate) abren la inscripción */}
         <HeroSection onOpenRegister={() => setShowRegisterModal(true)} />
         <PresentationSection />
         <PurposeSection />
@@ -29,6 +32,7 @@ export default function Home() {
       <LandingFooter />
       <RegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
       <WhatsAppFloat />
+      <VotacionFloat isOpen={showVotacionModal} onClose={() => setShowVotacionModal(false)} />
       <WalkingPenguin />
     </div>
   );

@@ -103,7 +103,8 @@ export async function registrarInscripcion(payload) {
  * Detecta violación de unicidad (dni, matrícula o teléfono duplicado).
  */
 export function esErrorDuplicado(error) {
-  return error?.code === '23505'
+  // Supabase devuelve code '23505' (PostgreSQL) o status 409 (HTTP) para duplicados
+  return error?.code === '23505' || error?.status === 409
 }
 
 /**
@@ -115,7 +116,11 @@ export function obtenerMensajeError(error) {
   }
 
   if (esErrorDuplicado(error)) {
-    return 'Ya existe una inscripción con esos datos.'
+    const detalle = error?.details ?? ''
+    if (/dni/i.test(detalle))              return 'Ya existe una inscripción con ese DNI.'
+    if (/telefono|phone/i.test(detalle))   return 'Ya existe una inscripción con ese teléfono.'
+    if (/matricula|codigo/i.test(detalle)) return 'Ya existe una inscripción con ese código de matrícula.'
+    return 'Ya existe una inscripción con esos datos. Verifica tu DNI, matrícula o teléfono.'
   }
 
   if (error?.code === '42501') {
@@ -147,6 +152,157 @@ export function obtenerSupabase() {
   const { client } = obtenerCliente()
   return client
 }
+
+/**
+ * Consulta el local y mesa de votación de un estudiante.
+ * Consulta directa a mesas_estudiantes — sin RPC, sin cambios en BD.
+ * Intenta también obtener datos personales de inscripciones (opcional).
+ */
+export async function consultarLocalVotacion(codigoMatricula) {
+  const { client, configError } = obtenerCliente()
+
+  if (configError) {
+    return { data: null, error: { message: configError } }
+  }
+
+  const codigo = codigoMatricula.trim()
+
+  try {
+    // 1. Buscar mesa asignada en mesas_estudiantes
+    const { data: mesaData, error: mesaError } = await client
+      .from('mesas_estudiantes')
+      .select('mesa, posicion, local_votacion, codigo')
+      .eq('codigo', codigo)
+      .limit(1)
+
+    if (mesaError) {
+      console.error('Error consultando mesas_estudiantes:', mesaError)
+      return { data: null, error: mesaError }
+    }
+
+    if (!mesaData || mesaData.length === 0) {
+      // 1.5. Si no está en mesas_estudiantes, puede ser de Postgrado
+      try {
+        const campos = 'nro_dni, apellido_paterno, apellido_materno, nombres, programa_academico'
+        let { data: estData } = await client
+          .from('estudiantes')
+          .select(campos)
+          .eq('nro_matricula', codigo)
+          .limit(1)
+
+        if (!estData || estData.length === 0) {
+          ;({ data: estData } = await client
+            .from('estudiantes')
+            .select(campos)
+            .ilike('nro_matricula', `%${codigo}`)
+            .limit(1))
+        }
+
+        if (!estData || estData.length === 0) {
+          ;({ data: estData } = await client
+            .from('estudiantes')
+            .select(campos)
+            .ilike('nro_matricula', `%${codigo}%`)
+            .limit(1))
+        }
+
+        if (estData && estData.length > 0) {
+          const e = estData[0]
+          const prog = (e.programa_academico ?? '').toUpperCase()
+          
+          // Si es estudiante de postgrado (carrera contiene POSTGRADO)
+          if (prog.includes('POSTGRADO')) {
+            const alumnoNombre  = `${e.apellido_paterno} ${e.apellido_materno}, ${e.nombres}`
+            const alumnoDni     = e.nro_dni            ?? null
+            const alumnoCarrera = e.programa_academico ?? null
+
+            return {
+              data: [{
+                alumno_nombre:  alumnoNombre,
+                alumno_dni:     alumnoDni,
+                alumno_carrera: alumnoCarrera,
+                mesa:           'Especial', // Mesa especial para postgrado
+                posicion:       '-',
+                local_votacion: 'ING ECONOMICA', // Asignado a Ingeniería Económica
+              }],
+              error: null,
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Error buscando fallback de postgrado:', err)
+      }
+
+      return { data: [], error: null }
+    }
+
+    const fila = mesaData[0]
+
+    // 2. Buscar datos personales en la tabla estudiantes por nro_matricula
+    //    El codigo de 6 dígitos puede ser parte del nro_matricula completo,
+    //    así que probamos en cascada: exacto → sufijo → contiene
+    let alumnoNombre  = null
+    let alumnoDni     = null
+    let alumnoCarrera = null
+
+    try {
+      const campos = 'nro_dni, apellido_paterno, apellido_materno, nombres, programa_academico'
+
+      // Intento 1: coincidencia exacta
+      let { data: estData } = await client
+        .from('estudiantes')
+        .select(campos)
+        .eq('nro_matricula', codigo)
+        .limit(1)
+
+      // Intento 2: el código es sufijo del nro_matricula (ej: 2021 + 214996)
+      if (!estData || estData.length === 0) {
+        ;({ data: estData } = await client
+          .from('estudiantes')
+          .select(campos)
+          .ilike('nro_matricula', `%${codigo}`)
+          .limit(1))
+      }
+
+      // Intento 3: el código aparece en cualquier parte del nro_matricula
+      if (!estData || estData.length === 0) {
+        ;({ data: estData } = await client
+          .from('estudiantes')
+          .select(campos)
+          .ilike('nro_matricula', `%${codigo}%`)
+          .limit(1))
+      }
+
+      if (estData && estData.length > 0) {
+        const e = estData[0]
+        // Nombre completo: APELLIDO PATERNO APELLIDO MATERNO, Nombres
+        alumnoNombre  = `${e.apellido_paterno} ${e.apellido_materno}, ${e.nombres}`
+        alumnoDni     = e.nro_dni            ?? null
+        alumnoCarrera = e.programa_academico ?? null
+      }
+    } catch (err) {
+      console.warn('No se pudo obtener datos de estudiantes:', err)
+    }
+
+
+    // 3. Devolver en el formato que espera el componente
+    return {
+      data: [{
+        alumno_nombre:  alumnoNombre,
+        alumno_dni:     alumnoDni,
+        alumno_carrera: alumnoCarrera,
+        mesa:           fila.mesa,
+        posicion:       fila.posicion,
+        local_votacion: fila.local_votacion,
+      }],
+      error: null,
+    }
+  } catch (err) {
+    console.error('Error al consultar local de votación:', err)
+    return { data: null, error: { message: 'Error inesperado al consultar.' } }
+  }
+}
+
 
 /**
  * Valida credenciales del admin contra la base de datos.

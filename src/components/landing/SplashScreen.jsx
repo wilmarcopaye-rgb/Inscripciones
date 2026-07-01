@@ -22,7 +22,7 @@ export default function SplashScreen() {
   return (
     <>
       <div className={`splash-overlay ${phase === 'fading' ? 'splash-fade-out' : ''}`}>
-        <img src="/gato.jpg" alt="Bienvenida" className="splash-img" />
+        <img src="/gato.png" alt="Bienvenida" className="splash-img" />
       </div>
 
       <style>{`

@@ -20,7 +20,7 @@ export default function Topbar({ onOpenRegister }) {
             <img src="/yape.png" alt="Yape" className="yape-logo" />
             <span className="yape-text">participa y gana</span> {/* ✨ texto cambiado */}
             <button onClick={onOpenRegister} className="btn-inscribete">
-              Inscríbete
+              Consultar Local
             </button>
             <img src="/yapeo.gif" alt="Regalo" className="gift-icon" />
           </div>
